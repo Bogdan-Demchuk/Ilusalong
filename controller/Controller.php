@@ -13,10 +13,17 @@ class Controller
 
         include_once 'view/services.php';
     }
-
-    public static function error404()
+    public static function Categories()
     {
-        include_once 'view/error404.php';
+        $categories = Category::getAllCategory();
+
+        include_once 'view/category.php';
+    }
+    public static function ServicesByCategory($id)
+    {
+        $services = Services::getServicesByCategory($id);
+
+        include_once 'view/services.php';
     }
     public static function Service($id)
     {
@@ -27,5 +34,9 @@ class Controller
         }
 
         include_once 'view/service.php';
+    }
+    public static function error404()
+    {
+        include_once 'view/error404.php';
     }
 }

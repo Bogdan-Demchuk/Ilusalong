@@ -17,6 +17,7 @@
     <nav>
         <a href="/ilusalong/">Avaleht</a>
         <a href="/ilusalong/services">Teenused</a>
+        <a href="/ilusalong/category">Kategooriad</a>
         <a href="/ilusalong/employees">Meistrid</a>
         <a href="/ilusalong/reviews">Arvustused</a>
     </nav>

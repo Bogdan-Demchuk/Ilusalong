@@ -9,6 +9,7 @@ class Services
         $query = "
             SELECT
                 id,
+                category_id,
                 name_et,
                 name_ru,
                 description_et,
@@ -41,5 +42,28 @@ class Services
         ";
 
         return $db->getOne($query);
+    }
+    public static function getServicesByCategory($categoryId)
+    {
+        $db = new Database();
+
+        $categoryId = (int)$categoryId;
+
+        $query = "
+            SELECT
+                id,
+                category_id,
+                name_et,
+                name_ru,
+                description_et,
+                description_ru,
+                price,
+                duration
+            FROM services
+            WHERE category_id = $categoryId
+            ORDER BY name_et
+        ";
+
+        return $db->getAll($query);
     }
 }

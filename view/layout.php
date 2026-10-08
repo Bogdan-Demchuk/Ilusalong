@@ -6,7 +6,7 @@
 
     <title>Ilusalong</title>
 
-    <link rel="stylesheet" href="/public/css/mystyle.css">
+    <link rel="stylesheet" href="/ilusalong/public/css/mystyle.css">
 </head>
 
 <body>

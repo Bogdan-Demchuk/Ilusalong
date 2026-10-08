@@ -16,7 +16,11 @@ if (empty($services)) {
 
         $content .= '<article class="service-card">';
 
-        $content .= '<h3>' . htmlspecialchars($service['name_et']) . '</h3>';
+        $content .= '<h3>
+            <a href="/ilusalong/service?id=' . (int)$service['id'] . '">
+                ' . htmlspecialchars($service['name_et']) . '
+            </a>
+        </h3>';
 
         $content .= '<p>'
             . htmlspecialchars($service['description_et'])

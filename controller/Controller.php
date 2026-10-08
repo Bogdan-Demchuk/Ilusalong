@@ -18,4 +18,14 @@ class Controller
     {
         include_once 'view/error404.php';
     }
+    public static function Service($id)
+    {
+        $service = Services::getServiceById($id);
+
+        if (!$service) {
+            return self::error404();
+        }
+
+        include_once 'view/service.php';
+    }
 }

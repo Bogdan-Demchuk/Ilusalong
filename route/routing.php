@@ -10,6 +10,9 @@ if ($path == '' || $path == 'index' || $path == 'index.php') {
 elseif ($path == 'services') {
     $response = Controller::Services();
 }
+elseif ($path == 'service' && isset($_GET['id'])) {
+    $response = Controller::Service($_GET['id']);
+}
 else {
     $response = Controller::error404();
 }

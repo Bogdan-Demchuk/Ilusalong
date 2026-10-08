@@ -21,4 +21,25 @@ class Services
 
         return $db->getAll($query);
     }
+    public static function getServiceById($id)
+    {
+        $db = new database();
+
+        $id = (int)$id;
+
+        $query = "
+            SELECT
+                id,
+                name_et,
+                name_ru,
+                description_et,
+                description_ru,
+                price,
+                duration
+            FROM services
+            WHERE id = $id
+        ";
+
+        return $db->getOne($query);
+    }
 }

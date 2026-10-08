@@ -14,7 +14,7 @@ $content = '
         подходящую процедуру.
     </p>
 
-    <a href="/services" class="button">
+    <a href="/ilusalong/services" class="button">
         Посмотреть услуги
     </a>
 

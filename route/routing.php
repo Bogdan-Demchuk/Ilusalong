@@ -6,6 +6,10 @@ $path = explode('/', $host)[$num];
 
 if ($path == '' || $path == 'index' || $path == 'index.php') {
     $response = Controller::StartSite();
-} else {
+}
+elseif ($path == 'services') {
+    $response = Controller::Services();
+}
+else {
     $response = Controller::error404();
 }

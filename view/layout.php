@@ -15,10 +15,10 @@
     <h1>Ilusalong</h1>
 
     <nav>
-        <a href="/">Avaleht</a>
-        <a href="/services">Teenused</a>
-        <a href="/employees">Meistrid</a>
-        <a href="/reviews">Arvustused</a>
+        <a href="/ilusalong/">Avaleht</a>
+        <a href="/ilusalong/services">Teenused</a>
+        <a href="/ilusalong/employees">Meistrid</a>
+        <a href="/ilusalong/reviews">Arvustused</a>
     </nav>
 </header>
 

@@ -19,6 +19,9 @@ elseif ($path == 'category' && isset($_GET['id'])) {
 elseif ($path == 'category') {
     $response = Controller::Categories();
 }
+elseif ($path == 'employees') {
+    $response = Controller::Employees();
+}
 else {
     $response = Controller::error404();
 }

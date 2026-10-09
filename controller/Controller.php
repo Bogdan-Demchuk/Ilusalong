@@ -19,6 +19,12 @@ class Controller
 
         include_once 'view/category.php';
     }
+    public static function Employees()
+    {
+        $employees = Employees::getAllEmployees();
+
+        include_once 'view/employees.php';
+    }
     public static function ServicesByCategory($id)
     {
         $services = Services::getServicesByCategory($id);

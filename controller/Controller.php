@@ -41,8 +41,123 @@ class Controller
 
         include_once 'view/service.php';
     }
+    
+    public static function Appointments()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /ilusalong/login');
+            exit;
+        }
+
+        $services = Services::getAllServices();
+        $employees = Employees::getAllEmployees();
+
+        include 'view/appointments.php';
+    }
+
+    
+    public static function Login()
+    {
+        $error = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
+                $error = 'Palun sisesta korrektne email ja parool.';
+            } else {
+                $user = Auth::loginUser($email, $password);
+
+                if ($user) {
+                    session_regenerate_id(true);
+
+                    $_SESSION['user_id'] = (int) $user['id'];
+                    $_SESSION['user_name'] = $user['first_name'];
+                    $_SESSION['user_role'] = $user['role'];
+
+                    header('Location: /ilusalong/');
+                    exit;
+                }
+
+                $error = 'Vale email või parool.';
+            }
+        }
+
+        include 'view/login.php';
+    }
+
+    public static function Register()
+    {
+        $error = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirm = $_POST['confirm'] ?? '';
+
+            if (
+                $firstName === '' ||
+                $lastName === '' ||
+                !filter_var($email, FILTER_VALIDATE_EMAIL)
+            ) {
+                $error = 'Palun täida kõik väljad õigesti.';
+            } elseif (strlen($password) < 8) {
+                $error = 'Parool peab olema vähemalt 8 märki pikk.';
+            } elseif ($password !== $confirm) {
+                $error = 'Paroolid ei kattu.';
+            } elseif (Auth::getUserByEmail($email)) {
+                $error = 'Selle emailiga kasutaja on juba olemas.';
+            } else {
+                $result = Auth::registerUser(
+                    $firstName,
+                    $lastName,
+                    $email,
+                    $password
+                );
+
+                if ($result) {
+                    header('Location: /ilusalong/login');
+                    exit;
+                }
+
+                $error = 'Registreerimine ebaõnnestus.';
+            }
+        }
+
+        include 'view/register.php';
+    }
+
+    public static function Logout()
+    {
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
+            );
+        }
+
+        session_destroy();
+
+        header('Location: /ilusalong/');
+        exit;
+    }
+
+
     public static function error404()
     {
-        include_once 'view/error404.php';
+        include 'view/error404.php';
     }
+
 }

@@ -47,13 +47,20 @@ class database {
         return $response;
     }
 
-    function getAll($query) {
+    
+    function getAll($query, $params = []) {
         $stmt = $this->conn->prepare($query);
-        $stmt->execute();
+        $stmt->execute($params);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $response = $stmt->fetchAll();
         return $response;
     }
+    
+    function executePrepared($query, $params = []) {
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute($params);
+    }
+
 
     function executeRun($query) {
         $response = $this->conn->exec($query);

@@ -1,33 +1,55 @@
 <?php
-class News{
 
-    public static function getLast10News() {
-        $query = "SELECT * FROM news ORDER BY id DESC LIMIT 3" ;
+class Appointments
+{
+    public static function getAllAppointments()
+    {
         $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
+
+        $query = "
+            SELECT
+                appointments.*,
+                services.name_et,
+                employees.first_name,
+                employees.last_name,
+                users.first_name AS user_first_name,
+                users.last_name AS user_last_name
+            FROM appointments
+            JOIN services
+                ON appointments.service_id = services.id
+            JOIN employees
+                ON appointments.employee_id = employees.id
+            JOIN users
+                ON appointments.user_id = users.id
+            ORDER BY
+                appointments.appointment_date,
+                appointments.appointment_time
+        ";
+
+        return $db->getAll($query);
     }
 
-    public static function getAllNews() {
-        $query = "SELECT * FROM news ORDER BY id DESC" ;
+    public static function getAppointmentsByUser($userId)
+    {
         $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
-    }
 
-    public static function getNewsByCategoryID($id)     {
-        $query = "SELECT * FROM news where category_id=".(string)$id." ORDER BY id DESC";
-        $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
-    }
+        $query = "
+            SELECT
+                appointments.*,
+                services.name_et,
+                employees.first_name,
+                employees.last_name
+            FROM appointments
+            JOIN services
+                ON appointments.service_id = services.id
+            JOIN employees
+                ON appointments.employee_id = employees.id
+            WHERE appointments.user_id = ?
+            ORDER BY
+                appointments.appointment_date DESC,
+                appointments.appointment_time DESC
+        ";
 
-    public static function getNewsByID($id) {
-        $query = "SELECT * FROM news where id=".(string)$id;
-        $db = new Database();
-        $n = $db->getOne($query);
-        return $n;
+        return $db->getAll($query, [(int)$userId]);
     }
-
 }
-?>

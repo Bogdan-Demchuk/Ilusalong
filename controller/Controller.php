@@ -138,8 +138,60 @@ class Controller
         exit;
     }
 
+    public static function Reviews()
+    {
+        $error = '';
+        $success = '';
 
-    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_SESSION['user_id'])) {
+                header('Location: /ilusalong/login');
+                exit;
+            }
+
+            $serviceId = filter_input(
+                INPUT_POST,
+                'service_id',
+                FILTER_VALIDATE_INT
+            );
+
+            $rating = filter_input(
+                INPUT_POST,
+                'rating',
+                FILTER_VALIDATE_INT
+            );
+
+            $comment = trim($_POST['comment'] ?? '');
+
+            if (!$serviceId || !$rating || $rating < 1 || $rating > 5 || $comment === '') {
+                $error = 'Palun vali teenus, hinnang ja kirjuta kommentaar.';
+            } else {
+                $created = Reviews::createReview(
+                    (int) $_SESSION['user_id'],
+                    $serviceId,
+                    $rating,
+                    $comment
+                );
+
+                if ($created) {
+                    header('Location: /ilusalong/reviews?submitted=1');
+                    exit;
+                }
+
+                $error = 'Arvustuse lisamine ebaõnnestus.';
+            }
+        }
+
+        if (isset($_GET['submitted']) && $_GET['submitted'] === '1') {
+            $success = 'Aitäh! Sinu arvustus on lisatud.';
+        }
+
+        $reviews = Reviews::getAllReviews();
+        $services = Services::getAllServices();
+
+        include 'view/reviews.php';
+    }
+
     public static function Login()
     {
         $error = '';

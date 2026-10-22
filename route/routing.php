@@ -30,6 +30,12 @@ elseif ($path === 'appointments') {
 elseif ($path === 'my-appointments') {
     $response = Controller::MyAppointments();
 }
+elseif ($path === 'cancel-appointment') {
+    $response = Controller::CancelAppointment();
+}
+elseif ($path === 'reviews') {
+    $response = Controller::Reviews();
+}
 elseif ($path === 'login') {
     $response = Controller::Login();
 }

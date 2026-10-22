@@ -52,4 +52,30 @@ class Appointments
 
         return $db->getAll($query, [(int)$userId]);
     }
+    public static function createAppointment(
+        $userId,
+        $employeeId,
+        $serviceId,
+        $date,
+        $time,
+        $comment
+    ) {
+        $db = new Database();
+
+        $query = "
+            INSERT INTO appointments
+                (user_id, employee_id, service_id,
+                appointment_date, appointment_time, status, comment)
+            VALUES (?, ?, ?, ?, ?, 'pending', ?)
+        ";
+
+        return $db->executePrepared($query, [
+            (int)$userId,
+            (int)$employeeId,
+            (int)$serviceId,
+            $date,
+            $time,
+            $comment
+        ]);
+    }
 }

@@ -5,8 +5,18 @@ ob_start();
 <div class="appointments-page">
     <h2>Broneeri aeg</h2>
     <p>Vali teenus, meister ja sobiv aeg.</p>
+    <?php if (!empty($error)): ?>
+        <p class="error-message">
+            <?php echo htmlspecialchars($error); ?>
+        </p>
+    <?php endif; ?>
 
-    <form class="appointment-form" method="POST">
+    <?php if (!empty($success)): ?>
+        <p class="success-message">
+            <?php echo htmlspecialchars($success); ?>
+        </p>
+    <?php endif; ?>
+        <form class="appointment-form" method="POST">
         <label for="service_id">Teenus</label>
         <select name="service_id" id="service_id" required>
             <option value="">Vali teenus</option>

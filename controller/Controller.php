@@ -49,11 +49,53 @@ class Controller
             exit;
         }
 
+        $error = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $serviceId = filter_input(INPUT_POST, 'service_id', FILTER_VALIDATE_INT);
+            $employeeId = filter_input(INPUT_POST, 'employee_id', FILTER_VALIDATE_INT);
+            $date = $_POST['appointment_date'] ?? '';
+            $time = $_POST['appointment_time'] ?? '';
+            $comment = trim($_POST['comment'] ?? '');
+
+            if (!$serviceId || !$employeeId || $date === '' || $time === '') {
+                $error = 'Palun täida kõik kohustuslikud väljad.';
+            } elseif ($date < date('Y-m-d')) {
+                $error = 'Kuupäev ei saa olla minevikus.';
+            } else {
+                try {
+                    $result = Appointments::createAppointment(
+                        (int) $_SESSION['user_id'],
+                        $employeeId,
+                        $serviceId,
+                        $date,
+                        $time,
+                        $comment
+                    );
+
+                    if ($result) {
+                        header('Location: /ilusalong/appointments?booked=1');
+                        exit;
+                    }
+
+                    $error = 'Broneerimine ebaõnnestus. Palun proovi uuesti.';
+                } catch (PDOException $e) {
+                    $error = 'Broneerimine ebaõnnestus. Kontrolli andmeid ja proovi uuesti.';
+                }
+            }
+        }
+
+        if (isset($_GET['booked']) && $_GET['booked'] === '1') {
+            $success = 'Aeg on edukalt broneeritud!';
+        }
+
         $services = Services::getAllServices();
         $employees = Employees::getAllEmployees();
 
         include 'view/appointments.php';
     }
+
 
     
     public static function Login()

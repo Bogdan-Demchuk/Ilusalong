@@ -78,4 +78,21 @@ class Appointments
             $comment
         ]);
     }
+    public static function cancelAppointment($appointmentId, $userId)
+    {
+        $db = new Database();
+
+        $query = "
+            UPDATE appointments
+            SET status = 'cancelled'
+            WHERE id = ?
+            AND user_id = ?
+            AND status IN ('pending', 'confirmed')
+        ";
+
+        return $db->executePrepared($query, [
+            (int) $appointmentId,
+            (int) $userId
+        ]);
+    }
 }

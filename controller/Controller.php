@@ -95,6 +95,48 @@ class Controller
 
         include 'view/appointments.php';
     }
+    public static function MyAppointments()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /ilusalong/login');
+            exit;
+        }
+
+        $appointments = Appointments::getAppointmentsByUser(
+            (int) $_SESSION['user_id']
+        );
+
+        include 'view/my-appointments.php';
+    }
+
+    public static function CancelAppointment()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /ilusalong/login');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /ilusalong/my-appointments');
+            exit;
+        }
+
+        $appointmentId = filter_input(
+            INPUT_POST,
+            'appointment_id',
+            FILTER_VALIDATE_INT
+        );
+
+        if ($appointmentId) {
+            Appointments::cancelAppointment(
+                $appointmentId,
+                (int) $_SESSION['user_id']
+            );
+        }
+
+        header('Location: /ilusalong/my-appointments');
+        exit;
+    }
 
 
     

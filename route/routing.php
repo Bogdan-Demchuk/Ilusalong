@@ -27,6 +27,9 @@ elseif ($path === 'employees') {
 elseif ($path === 'appointments') {
     $response = Controller::Appointments();
 }
+elseif ($path === 'my-appointments') {
+    $response = Controller::MyAppointments();
+}
 elseif ($path === 'login') {
     $response = Controller::Login();
 }

@@ -1,13 +1,24 @@
 <?php
+
 session_start();
-    require_once '../inc/database.php';
-    include_once("modelAdmin/modelAdmin.php");
-    include_once("modelAdmin/modelAdminNews.php");
-    include_once("modelAdmin/modelAdminCategory.php");
 
-    include_once("controllerAdmin/controllerAdmin.php");
-    include_once("controllerAdmin/controllerAdminNews.php");
+require_once __DIR__ . '/../inc/Database.php';
+require_once __DIR__ . '/../model/Auth.php';
 
-    include('routeAdmin/routingAdmin.php'); //!!!!
+require_once __DIR__ . '/modelAdmin/modelAdmin.php';
+require_once __DIR__ . '/modelAdmin/modelAdminAppointments.php';
+require_once __DIR__ . '/modelAdmin/modelAdminCategory.php';
+require_once __DIR__ . '/modelAdmin/modelAdminEmployees.php';
+require_once __DIR__ . '/modelAdmin/modelAdminReviews.php';
+require_once __DIR__ . '/modelAdmin/modelAdminServices.php';
 
-    echo $response;
+require_once __DIR__ . '/controllerAdmin/controllerAdmin.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminAppointments.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminCategory.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminEmployees.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminRevies.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminServices.php';
+
+require_once __DIR__ . '/routeAdmin/routingAdmin.php';
+
+echo $response;

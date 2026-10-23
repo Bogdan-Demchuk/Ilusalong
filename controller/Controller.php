@@ -212,7 +212,11 @@ class Controller
                     $_SESSION['user_name'] = $user['first_name'];
                     $_SESSION['user_role'] = $user['role'];
 
-                    header('Location: /ilusalong/');
+                    if ($user['role'] === 'admin') {
+                        header('Location: /ilusalong/ilusalong_admin/');
+                    } else {
+                        header('Location: /ilusalong/index');
+                    }
                     exit;
                 }
 

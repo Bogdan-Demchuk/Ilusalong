@@ -67,4 +67,3 @@ class database {
         return $response;
     }
 }
-?>

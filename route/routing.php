@@ -6,7 +6,10 @@ $path = trim($uri, '/');
 $path = preg_replace('#^ilusalong/?#', '', $path);
 $path = trim($path, '/');
 
-if ($path === '' || $path === 'index' || $path === 'index.php') {
+if ($path === '') {
+    $response = Controller::Login();
+}
+elseif ($path === 'index' || $path === 'index.php') {
     $response = Controller::StartSite();
 }
 elseif ($path === 'services') {

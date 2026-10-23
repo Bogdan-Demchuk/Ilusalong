@@ -40,10 +40,33 @@ class Auth
             return false;
         }
 
-        if (!password_verify($password, $user['password'])) {
-            return false;
+        $storedPassword = $user['password'];
+
+        if (password_verify($password, $storedPassword)) {
+            return $user;
         }
 
-        return $user;
+        // Поддержка старых аккаунтов с паролями в открытом виде.
+        if (hash_equals($storedPassword, $password)) {
+            $db = new Database();
+
+            $db->executePrepared(
+                "UPDATE users SET password = ? WHERE id = ?",
+                [
+                    password_hash($password, PASSWORD_DEFAULT),
+                    (int) $user['id']
+                ]
+            );
+
+            return $user;
+        }
+
+        return false;
+    }
+    public static function isAdmin()
+    {
+        return isset($_SESSION['user_id'])
+            && isset($_SESSION['user_role'])
+            && $_SESSION['user_role'] === 'admin';
     }
 }

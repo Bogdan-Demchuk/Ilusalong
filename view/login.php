@@ -28,5 +28,7 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
+$isLoginPage = true;
+
 include 'view/layout.php';
 ?>

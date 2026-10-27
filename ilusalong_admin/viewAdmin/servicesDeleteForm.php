@@ -1,79 +1,29 @@
-<?php ob_start(); ?>
+<h2>Teenuse kustutamine</h2>
 
-<div class="container" style="min-height:400px;">
-<div class="col-md-11">
-    <h2>News delete </h2>
-    <?php
-    if(isset($test)){
-        if($test==true)
-        {
-            ?>
-            <div class="alert alert-info">
-                <strong>Запись удалена. </strong><a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-        else if($test==false)
-        {
-            ?>
-            <div class="alert alert-warning">
-                <strong>Ошибка удаления записи!</strong> <a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-    }
-    else{
-        ?>
+<?php if (!empty($error)): ?>
+    <p class="error">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+    </p>
+<?php endif; ?>
 
-        <form method='POST' action="newsDelResult?id=<?php echo $id; ?>" enctype="multipart/form-data">
-            <table class='table table-bordered'>
-                <tr>
-                    <td>News title</td>
-                    <td><input type='text' name='title' class='form-control' required value="<?php echo $detail['title']; ?>" readonly></td>
-                </tr>
-                <tr>
-                    <td>News text</td>
-                    <td><textarea rows="5" name="text" class='form-control' required readonly><?php echo $detail['text']; ?></textarea></td>
-                </tr>
-                <tr>
-                    <td>Category</td>
-                    <td>
-                        <select name="idCategory" class="form-control" disabled>
-                            <?php
-                                foreach($arr as $row){
-                                echo '<option value="'.$row['id'].'"';
-                                    if($row['id']==$detail['category_id']) echo 'selected';
-                                echo '>'.$row['name'].'</option>';
-                                }
-                            ?>
-                        </select>
-                    </td>
-                </tr>
-                <!-- image-->
-                <tr>
-                    <td>OldPicture</td>
-                    <td><div>
-                    <!--<img src="../images/<?php //echo $detail['picture']; ?>" width=150>-->
-                    <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $detail['picture'] ).'" width=150 />';?>
-                    </div></td>
-                </tr>
-                <!-- end image-->
+<p>
+    Kas oled kindel, et soovid kustutada teenuse
+    <strong><?= htmlspecialchars($service['name_et'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>
+    /
+    <strong><?= htmlspecialchars($service['name_ru'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>?
+</p>
 
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" class="btn btn-primary" name="save">
-                            <span class="glyphicon glyphicon-plus"></span> Удалить
-                        </button>
-                        <a href="newsAdmin" class="btn btn-large btn-success">
-                            <i class="glyphicon glyphicon-backward"></i> &nbsp;Назад к списку</a>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    <?php
-    }
-    ?>
-    </div>
-</div>
-<?php $content = ob_get_clean(); ?>
-<?php include "viewAdmin/templates/layout.php"; ?>
+<p>
+    Hind:
+    <?= htmlspecialchars((string) ($service['price'] ?? ''), ENT_QUOTES, 'UTF-8') ?> €
+</p>
+
+<p>
+    Kestus:
+    <?= (int) ($service['duration'] ?? 0) ?> min
+</p>
+
+<form method="POST" action="/ilusalong/ilusalong_admin/services/delete?id=<?= (int) $service['id'] ?>">
+    <button type="submit">Jah, kustuta</button>
+    <a href="/ilusalong/ilusalong_admin/services">Tühista</a>
+</form>

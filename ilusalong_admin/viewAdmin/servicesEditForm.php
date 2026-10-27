@@ -1,85 +1,80 @@
-<?php ob_start(); ?>
+<h2>Teenuse muutmine</h2>
 
-<div class="container" style="min-height:400px;">
-<div class="col-md-11">
-    <h2>News Edit </h2>
-    <?php
-    if(isset($test)){
-        if($test==true)
-        {
-            ?>
-            <div class="alert alert-info">
-                <strong>Запись изменена. </strong><a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-        else if($test==false)
-        {
-            ?>
-            <div class="alert alert-warning">
-                <strong>Ошибка изменения записи!</strong> <a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-    }
-    else{
-        ?>
+<?php if (!empty($error)): ?>
+    <p class="error">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+    </p>
+<?php endif; ?>
 
-        <form method='POST' action="newsEditResult?id=<?php echo $id; ?>" enctype="multipart/form-data">
-            <table class='table table-bordered'>
-                <tr>
-                    <td>News title</td>
-                    <td><input type='text' name='title' class='form-control' required value="<?php echo $detail['title']; ?>"></td>
-                </tr>
-                <tr>
-                    <td>News text</td>
-                    <td><textarea rows="5" name="text" class='form-control' required><?php echo $detail['text']; ?></textarea></td>
-                </tr>
-                <tr>
-                    <td>Category</td>
-                    <td>
-                        <select name="idCategory" class="form-control" >
-                            <?php
-                                foreach($arr as $row){
-                                echo '<option value="'.$row['id'].'"';
-                                    if($row['id']==$detail['category_id']) echo 'selected';
-                                echo '>'.$row['name'].'</option>';
-                                }
-                            ?>
-                        </select>
-                    </td>
-                </tr>
-                <!-- image-->
-                <tr>
-                    <td>OldPicture</td>
-                    <td><div>
-                    <!--<img src="../images/<?php //echo $detail['picture']; ?>" width=150>-->
-                    <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $detail['picture'] ).'" width=150 />';?>
-                    </div></td>
-                </tr>
-                <tr>
-                    <td>Picture</td>
-                    <td><div>
-                        <input type=file name="picture" style="color:black;">
-                    </div></td>
-                </tr>
-                <!-- end image-->
+<form method="POST" action="/ilusalong/ilusalong_admin/services/edit?id=<?= (int) $service['id'] ?>">
+    <label for="category_id">Kategooria:</label>
 
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" class="btn btn-primary" name="save">
-                            <span class="glyphicon glyphicon-plus"></span> Изменить
-                        </button>
-                        <a href="newsAdmin" class="btn btn-large btn-success">
-                            <i class="glyphicon glyphicon-backward"></i> &nbsp;Назад к списку</a>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    <?php
-    }
-    ?>
-    </div>
-</div>
-<?php $content = ob_get_clean(); ?>
-<?php include "viewAdmin/templates/layout.php"; ?>
+    <select id="category_id" name="category_id" required>
+        <option value="">Vali kategooria</option>
+
+        <?php foreach ($categories as $category): ?>
+            <option
+                value="<?= (int) $category['id'] ?>"
+                <?= (string) $service['category_id'] === (string) $category['id'] ? 'selected' : '' ?>
+            >
+                <?= htmlspecialchars(
+                    $category['name_et'] . ' / ' . $category['name_ru'],
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <label for="name_et">Nimi eesti keeles:</label>
+    <input
+        id="name_et"
+        type="text"
+        name="name_et"
+        value="<?= htmlspecialchars($service['name_et'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="name_ru">Название на русском:</label>
+    <input
+        id="name_ru"
+        type="text"
+        name="name_ru"
+        value="<?= htmlspecialchars($service['name_ru'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="description_et">Kirjeldus eesti keeles:</label>
+    <textarea id="description_et" name="description_et"><?= htmlspecialchars($service['description_et'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+
+    <label for="description_ru">Описание на русском:</label>
+    <textarea id="description_ru" name="description_ru"><?= htmlspecialchars($service['description_ru'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+
+    <label for="price">Hind (€):</label>
+    <input
+        id="price"
+        type="number"
+        name="price"
+        min="0"
+        step="0.01"
+        value="<?= htmlspecialchars((string) ($service['price'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="duration">Kestus (minutites):</label>
+    <input
+        id="duration"
+        type="number"
+        name="duration"
+        min="1"
+        step="1"
+        value="<?= htmlspecialchars((string) ($service['duration'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <button type="submit">Salvesta muudatused</button>
+</form>
+
+<p>
+    <a href="/ilusalong/ilusalong_admin/services">Tagasi</a>
+</p>

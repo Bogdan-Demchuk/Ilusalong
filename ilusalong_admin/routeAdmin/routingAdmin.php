@@ -22,6 +22,18 @@ switch ($path) {
         $response = ControllerAdminAppointments::index();
         break;
 
+    case 'services/add':
+    $response = ControllerAdminServices::add();
+    break;
+
+    case 'services/edit':
+        $response = ControllerAdminServices::edit();
+        break;
+
+    case 'services/delete':
+        $response = ControllerAdminServices::delete();
+        break;
+
     case 'services':
         $response = ControllerAdminServices::index();
         break;

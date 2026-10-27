@@ -1,5 +1,11 @@
 <h2>Teenused</h2>
 
+<p>
+    <a href="/ilusalong/ilusalong_admin/">
+        ← Tagasi admini avalehele
+    </a>
+</p>
+
 <?php if (empty($services)): ?>
     <p>Teenuseid ei leitud.</p>
 <?php else: ?>

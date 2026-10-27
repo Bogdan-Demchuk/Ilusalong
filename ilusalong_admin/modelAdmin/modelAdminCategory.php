@@ -7,7 +7,7 @@ class ModelAdminCategory
         $db = new Database();
 
         return $db->getAll(
-            'SELECT * FROM category ORDER BY id DESC'
+            'SELECT * FROM category ORDER BY id ASC'
         );
     }
 }

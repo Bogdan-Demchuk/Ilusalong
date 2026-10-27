@@ -7,7 +7,7 @@ class ModelAdminEmployees
         $db = new Database();
 
         return $db->getAll(
-            'SELECT * FROM employees ORDER BY id DESC'
+            'SELECT * FROM employees ORDER BY id ASC'
         );
     }
 }

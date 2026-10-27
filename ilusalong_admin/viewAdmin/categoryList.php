@@ -1,5 +1,11 @@
 <h2>Kategooriad</h2>
 
+<p>
+    <a href="/ilusalong/ilusalong_admin/">
+        ← Tagasi admini avalehele
+    </a>
+</p>
+
 <?php if (empty($categories)): ?>
     <p>Kategooriaid ei leitud.</p>
 <?php else: ?>

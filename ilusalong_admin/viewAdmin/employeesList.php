@@ -1,5 +1,11 @@
 <h2>Meistrid</h2>
 
+<p>
+    <a href="/ilusalong/ilusalong_admin/">
+        ← Tagasi admini avalehele
+    </a>
+</p>
+
 <?php if (empty($employees)): ?>
     <p>Meistreid ei leitud.</p>
 <?php else: ?>

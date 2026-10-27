@@ -1,5 +1,11 @@
 <h2>Arvustused</h2>
 
+<p>
+    <a href="/ilusalong/ilusalong_admin/">
+        ← Tagasi admini avalehele
+    </a>
+</p>
+
 <?php if (empty($reviews)): ?>
     <p>Arvustusi ei leitud.</p>
 <?php else: ?>

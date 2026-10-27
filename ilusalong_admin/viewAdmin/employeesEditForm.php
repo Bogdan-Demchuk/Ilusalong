@@ -1,76 +1,65 @@
-<?php ob_start(); ?>
+<h2>Muuda töötajat</h2>
 
-<div class="container" style="min-height:400px;">
-<div class="col-md-11">
+<?php if (!empty($error)): ?>
+    <p class="error">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+    </p>
+<?php endif; ?>
 
-    <h2>News Add </h2>
-    <?php
-    if(isset($test)){
-        if($test==true)
-        {
-            ?>
-            <div class="alert alert-info">
-                <strong>Запись добавлена. </strong><a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-        else if($test==false)
-        {
-            ?>
-            <div class="alert alert-warning">
-                <strong>Ошибка добавления записи!</strong> <a href="newsAdmin"> Список новостей</a>
-            </div>
-            <?php
-        }
-    }
-    else{
-        ?>
-        <form method='POST' action="newsAddResult" enctype="multipart/form-data">
-            <table class='table table-bordered'>
-                <tr>
-                    <td>News title</td>
-                    <td><input type='text' name='title' class='form-control' required></td>
-                </tr>
-                <tr>
-                    <td>News text</td>
-                    <td><textarea rows="5" name="text" class='form-control' required></textarea></td>
-                </tr>
-                <tr>
-                    <td>Category</td>
-                    <td>
-                        <select name="idCategory" class="form-control" >
-                            <?php
-                                foreach($arr as $row){
-                                echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-                                }
-                            ?>
-                        </select>
-                    </td>
-                </tr>
-                <!-- image-->
-                <tr>
-                    <td>Picture</td>
-                    <td><div>
-                        <input type=file name="picture" style="color:black;">
-                    </div></td>
-                </tr>
-                <!-- end image-->
+<form method="POST"
+      action="/ilusalong/ilusalong_admin/employees/edit?id=<?= (int) $employee['id'] ?>">
 
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" class="btn btn-primary" name="save">
-                            <span class="glyphicon glyphicon-plus"></span> Сохранить
-                        </button>
-                        <a href="newsAdmin" class="btn btn-large btn-success">
-                            <i class="glyphicon glyphicon-backward"></i> &nbsp;Назад к списку</a>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    <?php
-    }    
-    ?>
-    </div>
-</div>
-<?php $content = ob_get_clean(); ?>
-<?php include "viewAdmin/templates/layout.php"; ?>
+    <label for="first_name">Eesnimi</label>
+    <input
+        type="text"
+        id="first_name"
+        name="first_name"
+        value="<?= htmlspecialchars($employee['first_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="last_name">Perekonnanimi</label>
+    <input
+        type="text"
+        id="last_name"
+        name="last_name"
+        value="<?= htmlspecialchars($employee['last_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="phone">Telefon</label>
+    <input
+        type="text"
+        id="phone"
+        name="phone"
+        value="<?= htmlspecialchars($employee['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+    >
+
+    <label for="email">E-post</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        value="<?= htmlspecialchars($employee['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+        required
+    >
+
+    <label for="position">Amet</label>
+    <input
+        type="text"
+        id="position"
+        name="position"
+        value="<?= htmlspecialchars($employee['position'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+    >
+
+    <label for="photo">Foto (faili tee või URL)</label>
+    <input
+        type="text"
+        id="photo"
+        name="photo"
+        value="<?= htmlspecialchars($employee['photo'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+    >
+
+    <button type="submit">Salvesta</button>
+    <a href="/ilusalong/ilusalong_admin/employees">Tühista</a>
+</form>

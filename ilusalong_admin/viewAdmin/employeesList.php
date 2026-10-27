@@ -1,4 +1,4 @@
-<h2>Meistrid</h2>
+<h2>Töötajad</h2>
 
 <p>
     <a href="/ilusalong/ilusalong_admin/">
@@ -6,23 +6,67 @@
     </a>
 </p>
 
+<p>
+    <a href="/ilusalong/ilusalong_admin/employees/add">
+        + Lisa töötaja
+    </a>
+</p>
+
 <?php if (empty($employees)): ?>
-    <p>Meistreid ei leitud.</p>
+    <p>Töötajaid ei leitud.</p>
 <?php else: ?>
     <table>
         <thead>
             <tr>
-                <?php foreach (array_keys($employees[0]) as $column): ?>
-                    <th><?= htmlspecialchars((string) $column, ENT_QUOTES, 'UTF-8') ?></th>
-                <?php endforeach; ?>
+                <th>ID</th>
+                <th>Eesnimi</th>
+                <th>Perekonnanimi</th>
+                <th>Telefon</th>
+                <th>E-post</th>
+                <th>Amet</th>
+                <th>Foto</th>
+                <th>Tegevused</th>
             </tr>
         </thead>
+
         <tbody>
             <?php foreach ($employees as $employee): ?>
                 <tr>
-                    <?php foreach ($employee as $value): ?>
-                        <td><?= htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                    <?php endforeach; ?>
+                    <td><?= (int) $employee['id'] ?></td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['first_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['last_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['position'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <?= htmlspecialchars($employee['photo'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
+                    <td>
+                        <a href="/ilusalong/ilusalong_admin/employees/edit?id=<?= (int) $employee['id'] ?>">
+                            Muuda
+                        </a>
+                        |
+                        <a href="/ilusalong/ilusalong_admin/employees/delete?id=<?= (int) $employee['id'] ?>">
+                            Kustuta
+                        </a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

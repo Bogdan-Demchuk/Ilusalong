@@ -29,6 +29,17 @@ switch ($path) {
     case 'categories':
         $response = ControllerAdminCategory::index();
         break;
+    case 'categories/add':
+    $response = ControllerAdminCategory::add();
+    break;
+
+    case 'categories/edit':
+        $response = ControllerAdminCategory::edit();
+        break;
+
+    case 'categories/delete':
+        $response = ControllerAdminCategory::delete();
+        break;
 
     case 'employees':
         $response = ControllerAdminEmployees::index();

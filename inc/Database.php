@@ -39,14 +39,14 @@ class database {
         }
     }
 
-    function getOne($query) {
+    function getOne($query, $params = []) {
         $stmt = $this->conn->prepare($query);
-        $stmt->execute();
+        $stmt->execute($params);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $response = $stmt->fetch();
+
         return $response;
     }
-
     
     function getAll($query, $params = []) {
         $stmt = $this->conn->prepare($query);

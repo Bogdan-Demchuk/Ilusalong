@@ -1,44 +1,23 @@
 <?php
-class controllerAdminNews{
 
-    //list News
-    public static function NewsList() {
+class ControllerAdminCategory
+{
+    public static function index()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /ilusalong/login');
+            exit;
+        }
 
-        $arr=modelAdminNews::getNewsList();
-        include_once 'viewAdmin/newsList.php';
+        if (!Auth::isAdmin()) {
+            http_response_code(403);
+            return '403 — Juurdepääs keelatud';
+        }
+
+        $categories = ModelAdminCategory::getAll();
+
+        ob_start();
+        include __DIR__ . '/../viewAdmin/categoryList.php';
+        return ob_get_clean();
     }
-
-    public static function newsAddForm() {
-        $arr = modelAdminCategory::getCategoryList();
-        include_once ('viewAdmin/newsAddForm.php');
-    }
-
-    public static function newsAddResult() {
-        $test = modelAdminNews::getNewsAdd();
-        include_once ('viewAdmin/newsAddForm.php');
-    }
-
-    public static function NewsEditForm($id) {
-        $arr = modelAdminCategory::getCategoryList();
-        $detail = modelAdminNews::getNewsDetail($id);
-        include_once ('viewAdmin/newsEditForm.php');
-    }
-
-    public static function NewsEditResult($id) {
-        $test = modelAdminNews::getNewsEdit($id);
-        include_once ('viewAdmin/newsEditForm.php');
-    }
-
-    public static function newsDeleteForm($id) {
-        $arr = modelAdminCategory::getCategoryList();
-        $detail = modelAdminNews::getNewsDetail($id);
-        include_once ('viewAdmin/newsDeleteForm.php');
-    }
-
-    public static function newsDeleteResult($id) {
-        $test = modelAdminNews::getNewsDelete($id);
-        include_once ('viewAdmin/newsDeleteForm.php');
-    }
-
-}//class
-?>
+}

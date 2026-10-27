@@ -5,18 +5,18 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    color: #382d34;
-    background: #faf6f8;
+    background: #f5f2f4;
+    color: #302832;
 }
 
 .admin-header {
-    padding: 24px 5%;
+    padding: 22px 30px;
+    background: #542b49;
     color: white;
-    background: #67465a;
 }
 
 .admin-header h1 {
-    margin-top: 0;
+    margin: 0 0 18px;
 }
 
 .admin-header nav {
@@ -35,35 +35,60 @@ body {
 }
 
 .admin-main {
-    max-width: 1200px;
-    min-height: 65vh;
-    margin: 35px auto;
-    padding: 0 20px;
+    padding: 30px;
 }
 
-.dashboard-grid {
+.admin-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 20px;
-    margin-top: 30px;
 }
 
-.dashboard-card {
-    padding: 24px;
-    color: inherit;
-    text-decoration: none;
+.admin-card {
+    padding: 22px;
     background: white;
-    border: 1px solid #e7d9e1;
-    border-radius: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.dashboard-card:hover {
-    border-color: #67465a;
-    box-shadow: 0 5px 16px #67465a18;
+.admin-card p {
+    font-size: 30px;
+    font-weight: bold;
 }
 
-.admin-footer {
-    padding: 20px;
-    text-align: center;
-    background: #f0e6ec;
+.admin-card a {
+    color: #8a3f70;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #e3dce2;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+th {
+    background: #eadfe8;
+}
+
+@media (max-width: 600px) {
+    .admin-main {
+        padding: 15px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 7px;
+    }
 }

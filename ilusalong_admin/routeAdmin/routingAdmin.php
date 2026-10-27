@@ -1,24 +1,44 @@
 <?php
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = trim($uri, '/');
+$basePath = '/ilusalong/ilusalong_admin';
 
-$path = preg_replace(
-    '#^ilusalong_admin/?#',
-    '',
-    $path
-);
+if (strpos($uri, $basePath) === 0) {
+    $path = substr($uri, strlen($basePath));
+} else {
+    $path = $uri;
+}
 
 $path = trim($path, '/');
 
 switch ($path) {
     case '':
+    case 'index.php':
     case 'dashboard':
         $response = ControllerAdmin::startAdmin();
         break;
 
+    case 'appointments':
+        $response = ControllerAdminAppointments::index();
+        break;
+
+    case 'services':
+        $response = ControllerAdminServices::index();
+        break;
+
+    case 'categories':
+        $response = ControllerAdminCategory::index();
+        break;
+
+    case 'employees':
+        $response = ControllerAdminEmployees::index();
+        break;
+
+    case 'reviews':
+        $response = ControllerAdminRevies::index();
+        break;
+
     default:
-        http_response_code(404);
         $response = ControllerAdmin::error404();
         break;
 }

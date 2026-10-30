@@ -1,4 +1,9 @@
 <h2>Teenuste haldamine</h2>
+<p>
+    <a href="/ilusalong/ilusalong_admin/">
+        ← Tagasi admini avalehele
+    </a>
+</p>
 
 <p>
     <a href="/ilusalong/ilusalong_admin/services/add">+ Lisa uus teenus</a>
@@ -59,7 +64,3 @@
         </tbody>
     </table>
 <?php endif; ?>
-
-<p>
-    <a href="/ilusalong/ilusalong_admin/">Tagasi avalehele</a>
-</p>

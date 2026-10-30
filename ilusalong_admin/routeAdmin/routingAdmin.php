@@ -70,6 +70,22 @@ switch ($path) {
         $response = ControllerAdminEmployees::index();
         break;
 
+    case 'appointments/add':
+        $response = ControllerAdminAppointments::add();
+        break;
+
+    case 'appointments/edit':
+        $response = ControllerAdminAppointments::edit();
+        break;
+
+    case 'appointments/delete':
+        $response = ControllerAdminAppointments::delete();
+        break;
+
+    case 'appointments':
+        $response = ControllerAdminAppointments::index();
+        break;
+
     case 'reviews':
         $response = ControllerAdminRevies::index();
         break;

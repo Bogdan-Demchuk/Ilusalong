@@ -3,8 +3,18 @@ ob_start();
 ?>
 
 <div class="auth-page">
-    <h2>Logi sisse</h2>
+    <h2><?= t('Войти', 'Logi sisse') ?></h2>
+        <div class="language-switcher">
+            <a href="<?= htmlspecialchars(languageUrl('ru'), ENT_QUOTES, 'UTF-8') ?>">
+                Русский
+            </a>
 
+            |
+
+            <a href="<?= htmlspecialchars(languageUrl('et'), ENT_QUOTES, 'UTF-8') ?>">
+                Eesti
+            </a>
+        </div>
     <?php if (!empty($error)): ?>
         <p class="auth-error">
             <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
@@ -12,17 +22,26 @@ ob_start();
     <?php endif; ?>
 
     <form method="POST" action="/ilusalong/login" class="auth-form">
-        <label for="email">Email</label>
+        <label for="email">
+            <?= t('Электронная почта', 'E-post') ?>
+        </label>
         <input type="email" name="email" id="email" required>
 
-        <label for="password">Parool</label>
+        <label for="password">
+            <?= t('Пароль', 'Parool') ?>
+        </label>
         <input type="password" name="password" id="password" required>
 
-        <button type="submit">Logi sisse</button>
+        <button type="submit">
+            <?= t('Войти', 'Logi sisse') ?>
+        </button>
     </form>
 
-    <p>Pole veel kontot?
-        <a href="/ilusalong/register">Registreeru</a>
+    <p>
+        <?= t('Ещё нет аккаунта?', 'Pole veel kontot?') ?>
+        <a href="/ilusalong/register">
+            <?= t('Зарегистрироваться', 'Registreeru') ?>
+        </a>
     </p>
 </div>
 

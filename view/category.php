@@ -2,11 +2,11 @@
 
 $content = '<section class="categories-page">';
 
-$content .= '<h2>Kategooriad</h2>';
+$content .= '<h2>' . t('Категории', 'Kategooriad') . '</h2>';
 
 if (empty($categories)) {
 
-    $content .= '<p>Kategooriaid ei leitud.</p>';
+    $content .= '<p>' . t('Категории не найдены.', 'Kategooriaid ei leitud.') . '</p>';
 
 } else {
 
@@ -14,11 +14,15 @@ if (empty($categories)) {
 
     foreach ($categories as $category) {
 
+        $categoryName = ($_SESSION['lang'] ?? 'ru') === 'et'
+            ? $category['name_et']
+            : $category['name_ru'];
+
         $content .= '<article class="category-card">';
 
         $content .= '<h3>
             <a href="/ilusalong/category?id=' . (int)$category['id'] . '">
-                ' . htmlspecialchars($category['name_et']) . '
+                ' . htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') . '
             </a>
         </h3>';
 

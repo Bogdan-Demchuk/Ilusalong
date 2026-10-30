@@ -14,16 +14,16 @@ class Employees
     {
         $db = new Database();
 
-        $employeeId = (int)$employeeId;
-
-        $query = "
-            SELECT s.name_et
-            FROM employee_services es
-            JOIN services s ON es.service_id = s.id
-            WHERE es.employee_id = $employeeId
-            ORDER BY s.name_et
-        ";
-
-        return $db->getAll($query);
+        return $db->getAll(
+            'SELECT
+                services.id,
+                services.name_et,
+                services.name_ru
+            FROM employee_services
+            INNER JOIN services
+                ON employee_services.service_id = services.id
+            WHERE employee_services.employee_id = ?',
+            [$employeeId]
+        );
     }
 }

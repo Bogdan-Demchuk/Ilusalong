@@ -16,7 +16,8 @@ class Reviews
                 reviews.created_at,
                 users.first_name,
                 users.last_name,
-                services.name_et
+                services.name_et,
+                services.name_ru
             FROM reviews
             JOIN users ON reviews.user_id = users.id
             JOIN services ON reviews.service_id = services.id
@@ -32,7 +33,6 @@ class Reviews
         $rating,
         $comment
     ) {
-
         $db = new Database();
 
         $query = "
@@ -45,7 +45,7 @@ class Reviews
             (int) $userId,
             (int) $serviceId,
             (int) $rating,
-            $comment
+            (int) $comment === 0 ? $comment : $comment
         ]);
     }
 }

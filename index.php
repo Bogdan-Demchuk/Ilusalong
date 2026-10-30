@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include_once 'inc/language.php';
+
 include_once 'inc/Database.php';
 
 include_once 'model/Auth.php';

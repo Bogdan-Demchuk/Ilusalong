@@ -3,19 +3,21 @@
 $content = '
 <section class="hero">
 
-    <h2>Добро пожаловать в Ilusalong!</h2>
+    <h2>' . t('Добро пожаловать в Ilusalong!', 'Tere tulemast Ilusalongi!') . '</h2>
 
     <p>
-        Профессиональный уход за вашей красотой.
+        ' . t('Профессиональный уход за вашей красотой.', 'Professionaalne hoolitsus sinu ilu eest.') . '
     </p>
 
     <p>
-        Ознакомьтесь с нашими услугами и выберите
-        подходящую процедуру.
+        ' . t(
+            'Ознакомьтесь с нашими услугами и выберите подходящую процедуру.',
+            'Tutvu meie teenustega ja vali endale sobiv protseduur.'
+        ) . '
     </p>
 
     <a href="/ilusalong/services" class="button">
-        Посмотреть услуги
+        ' . t('Посмотреть услуги', 'Vaata teenuseid') . '
     </a>
 
 </section>

@@ -1,708 +1,1547 @@
+/* ==========================================================================
+   ILUSALONG — единая таблица стилей
+   Концепция: «будуар». Арки (как у зеркала), образцы оттенков (как свотчи
+   помады и лака), прайс-лист в духе меню процедур.
+   Все цвета и шрифты — в переменных ниже: меняйте их, и поменяется весь сайт.
+   ========================================================================== */
 
-/* ========================================
-   ILUSALONG — BEAUTY DESIGN
-======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Prata&display=swap');
 
 :root {
-    --bg: #fbf8f5;
-    --white: #ffffff;
-    --pink: #d9a6ad;
-    --pink-dark: #b97884;
-    --pink-light: #f5e8e8;
-    --text: #39302f;
-    --muted: #887d79;
-    --border: #eee3df;
-    --gold: #c5a477;
-    --shadow: 0 10px 35px rgba(80, 54, 48, 0.07);
+    /* Палитра */
+    --paper: #f7f1f3;          /* фон страницы — пудра */
+    --surface: #fffbfc;        /* карточки и формы */
+    --ink: #2a1730;            /* основной текст — сливовые чернила */
+    --ink-soft: #5f4b66;       /* второстепенный текст */
+    --line: #e7dae1;           /* тонкие линии */
+    --line-strong: #d4bfcb;    /* рамки полей и кнопок */
+    --plum: #3a1d44;           /* глубокая слива: главный экран, футер */
+    --berry: #a3325f;          /* главный акцент */
+    --berry-deep: #82244a;
+    --blush: #f0cfdc;
+    --blush-soft: #f8e4ec;
+    --brass: #b58a4b;          /* латунь: мелкие детали */
+    --brass-deep: #8a6430;
+
+    /* Шрифты. Запасные — те, что уже подключены в layout.php */
+    --font-display: 'Prata', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body: 'Manrope', 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* Формы */
+    --r-card: 22px;
+    --r-field: 14px;
+    --shadow-soft: 0 26px 50px -30px rgba(58, 29, 68, 0.38);
+
+    /* Прежние имена переменных — оставлены для совместимости */
+    --bg: var(--paper);
+    --white: var(--surface);
+    --pink: var(--blush);
+    --pink-dark: var(--berry);
+    --pink-light: var(--blush-soft);
+    --text: var(--ink);
+    --muted: var(--ink-soft);
+    --border: var(--line);
+    --gold: var(--brass);
+    --shadow: var(--shadow-soft);
+    --shadow-hover: var(--shadow-soft);
 }
 
-* {
+/* ==========================================================================
+   БАЗА
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
+    min-height: 100vh;
     margin: 0;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--blush);
+    color: var(--plum);
 }
 
 a {
     color: inherit;
     text-decoration: none;
-    transition: 0.3s ease;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+img {
+    max-width: 100%;
 }
 
 button,
 input,
 textarea,
 select {
-    font-family: inherit;
+    font: inherit;
+    color: inherit;
 }
 
 button {
     cursor: pointer;
 }
 
-/* ========================================
-   HEADER
-======================================== */
+h1, h2, h3, h4 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+}
+
+p {
+    margin: 0 0 1em;
+    color: var(--ink-soft);
+}
+
+:focus-visible {
+    outline: 2px solid var(--berry);
+    outline-offset: 3px;
+}
+
+.main-content {
+    width: 100%;
+    flex: 1;
+}
+
+/* ==========================================================================
+   ШАПКА
+   ========================================================================== */
 
 .site-header {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.96);
-    border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(12px);
+    width: 100%;
+    background: rgba(247, 241, 243, 0.88);
+    border-bottom: 1px solid var(--line);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    backdrop-filter: saturate(1.4) blur(14px);
+    transition: box-shadow 0.25s ease;
+}
+
+.site-header.is-scrolled {
+    box-shadow: 0 14px 30px -24px rgba(58, 29, 68, 0.55);
 }
 
 .header-container {
-    max-width: 1250px;
-    min-height: 100px;
+    max-width: 1256px;
     margin: 0 auto;
-    padding: 15px 25px;
+    padding: 14px 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    gap: 32px;
 }
 
+/* Логотип: значок слева, название и подпись справа */
 .logo {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
     align-items: center;
-    gap: 7px;
-    flex-wrap: wrap;
-    font-family: 'Playfair Display', serif;
-    font-size: 29px;
-    font-weight: 600;
-    color: var(--text);
+    flex: none;
+    color: var(--ink);
     line-height: 1;
 }
 
 .logo-icon {
-    color: var(--pink-dark);
+    grid-row: 1 / span 2;
+    color: var(--berry);
     font-size: 32px;
+    line-height: 1;
+}
+
+.logo > span:not(.logo-icon) {
+    font-family: var(--font-display);
+    font-size: 27px;
+    letter-spacing: -0.01em;
 }
 
 .logo small {
-    flex-basis: 100%;
-    padding-left: 38px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: var(--gold);
+    margin-top: 5px;
+    color: var(--brass-deep);
+    font-family: var(--font-body);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
 }
 
 .header-right {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 12px;
-}
-
-.language-switcher {
-    display: flex;
     align-items: center;
-    gap: 9px;
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.language-switcher a {
-    color: var(--muted);
-    font-weight: 600;
-}
-
-.language-switcher a:hover,
-.language-switcher a.active {
-    color: var(--pink-dark);
+    gap: 26px;
 }
 
 .main-nav {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 25px;
+    gap: 2px;
 }
 
 .main-nav a {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
     position: relative;
+    padding: 9px 13px;
+    color: var(--ink);
+    font-size: 14.5px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .main-nav a:not(.nav-login)::after {
     content: '';
     position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0;
-    height: 2px;
-    background: var(--pink-dark);
-    transition: 0.3s;
+    left: 13px;
+    right: 13px;
+    bottom: 3px;
+    height: 1.5px;
+    background: var(--berry);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
 }
 
-.main-nav a:hover {
-    color: var(--pink-dark);
+.main-nav a:not(.nav-login):hover,
+.main-nav a[aria-current="page"] {
+    color: var(--berry);
 }
 
-.main-nav a:hover::after {
-    width: 100%;
+.main-nav a:not(.nav-login):hover::after,
+.main-nav a[aria-current="page"]::after {
+    transform: scaleX(1);
 }
 
 .main-nav .nav-login {
-    padding: 10px 20px;
-    background: var(--pink-light);
-    border-radius: 30px;
-    color: var(--pink-dark);
+    margin-left: 10px;
+    padding: 9px 20px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
 }
 
 .main-nav .nav-login:hover {
-    background: var(--pink-dark);
-    color: white;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
 }
 
-/* ========================================
-   MAIN
-======================================== */
-
-.main-content {
-    min-height: 70vh;
-    padding-bottom: 50px;
+/* Переключатель языка в шапке — «таблетка» */
+.language-switcher {
+    font-size: 12.5px;
+    color: var(--ink-soft);
 }
 
-h1,
-h2,
-h3,
-h4 {
-    font-family: 'Playfair Display', serif;
-    color: var(--text);
+.site-header .language-switcher {
+    order: 2;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+}
+
+.site-header .language-switcher span {
+    display: none;
+}
+
+.site-header .language-switcher a {
+    padding: 5px 12px;
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.site-header .language-switcher a:hover {
+    color: var(--berry);
+}
+
+.site-header .language-switcher a.active {
+    background: var(--plum);
+    color: var(--paper);
+}
+
+/* ==========================================================================
+   ОБЩИЕ ЭЛЕМЕНТЫ СТРАНИЦ
+   ========================================================================== */
+
+.catalog-page,
+.categories-page,
+.reviews-page {
+    width: min(1200px, calc(100% - 48px));
+    margin: 72px auto 104px;
+}
+
+.appointments-page {
+    width: min(780px, calc(100% - 48px));
+    margin: 72px auto 104px;
+}
+
+.service-detail-page {
+    width: min(820px, calc(100% - 48px));
+    margin: 52px auto 104px;
+}
+
+/* Заголовок страницы */
+.catalog-heading {
+    margin-bottom: 52px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--line);
+}
+
+.categories-page > h2 {
+    margin-bottom: 52px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--line);
+}
+
+.catalog-heading h2,
+.categories-page > h2,
+.reviews-page > h2,
+.appointments-page > h2 {
+    margin: 0 0 18px;
+    font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.04;
+    text-align: left;
+}
+
+.categories-page > h2 {
+    margin-bottom: 52px;
+}
+
+.catalog-heading p,
+.reviews-page > h2 + p,
+.appointments-page > h2 + p {
+    max-width: 52ch;
+    margin: 0;
+    font-size: 17.5px;
+}
+
+.reviews-page > h2 + p,
+.appointments-page > h2 + p {
+    margin-bottom: 40px;
+}
+
+/* Малая надпись над заголовком: пишется заглавными в PHP,
+   здесь приводится к обычному регистру */
+.section-eyebrow {
+    display: block;
+    margin-bottom: 18px;
+    padding-left: 42px;
+    background: linear-gradient(currentColor, currentColor) no-repeat left center / 28px 1px;
+    color: var(--berry);
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.3;
+    text-transform: lowercase;
 }
 
-h2 {
-    font-size: 38px;
+.section-eyebrow::first-letter {
+    text-transform: uppercase;
+}
+
+.empty-message {
+    padding: 56px 24px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-card);
     text-align: center;
-    margin-bottom: 15px;
+    font-size: 17px;
 }
 
-p {
-    color: var(--muted);
+/* Кнопки */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* ========================================
-   SERVICES
-======================================== */
-
-.services-page {
-    max-width: 1150px;
-    margin: 65px auto;
-    padding: 0 25px;
+.button-primary {
+    background: var(--berry);
+    color: #fff;
 }
 
-.services-page h2 {
-    margin-bottom: 40px;
+.button-primary:hover {
+    background: var(--berry-deep);
 }
 
-.services-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
+.button-outline {
+    border-color: var(--line-strong);
+    background: transparent;
+    color: var(--ink);
 }
 
-.service-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 30px;
-    box-shadow: var(--shadow);
-    transition: transform 0.3s, box-shadow 0.3s;
+.button-outline:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
 }
 
-.service-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 18px 40px rgba(80, 54, 48, 0.12);
-}
-
-.service-card h3 {
-    margin: 0 0 15px;
-    font-size: 23px;
-}
-
-.service-card p {
-    line-height: 1.7;
-    margin: 10px 0;
-}
-
-.service-card strong {
-    color: var(--pink-dark);
-}
-
-/* ========================================
-   EMPLOYEES
-======================================== */
-
-.employees-page {
-    max-width: 1150px;
-    margin: 65px auto;
-    padding: 0 25px;
-}
-
-.employees-page h2 {
-    margin-bottom: 40px;
-}
-
-.employees-list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 25px;
-}
-
-.employee-card {
-    padding: 20px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    overflow-wrap: anywhere;
-    transition: transform 0.3s;
-}
-
-.employee-card:hover {
-    transform: translateY(-5px);
-}
-
-.employee-card h3 {
-    margin: 0 0 10px;
-    font-size: 23px;
-}
-
-.employee-card p {
-    margin: 8px 0;
+/* Сообщения */
+.error-message,
+.auth-error,
+.success-message {
+    display: block;
+    margin: 0 0 24px;
+    padding: 14px 18px;
+    border: 1px solid transparent;
+    border-radius: var(--r-field);
+    font-size: 14.5px;
+    font-weight: 500;
     line-height: 1.5;
 }
 
-.employee-position {
-    color: var(--pink-dark);
-    font-weight: 700;
+.error-message,
+.auth-error {
+    background: #fbeaee;
+    border-color: #efc3d0;
+    color: #8d1f46;
+}
+
+.success-message {
+    background: #e9f3ec;
+    border-color: #c3dccb;
+    color: #245a3b;
+}
+
+/* ==========================================================================
+   УСЛУГИ — меню процедур
+   ========================================================================== */
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.service-card {
+    --shade-a: #d36a92;
+    --shade-b: #a3325f;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.service-card:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Каждая карточка — свой «оттенок» */
+.service-card:nth-child(5n + 2) { --shade-a: #9a7bc0; --shade-b: #6e4a9a; }
+.service-card:nth-child(5n + 3) { --shade-a: #d7b06f; --shade-b: #a97f3d; }
+.service-card:nth-child(5n + 4) { --shade-a: #86a897; --shade-b: #587a69; }
+.service-card:nth-child(5n + 5) { --shade-a: #dba9a2; --shade-b: #b87a74; }
+
+.service-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.service-number {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+}
+
+.service-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(150deg, var(--shade-a), var(--shade-b));
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 18px;
+    line-height: 1;
+}
+
+.service-card h3 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+.service-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+    margin: 0 0 26px;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+/* Название ······ цена, как в прайс-листе */
+.service-meta {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+.service-meta::after {
+    content: '';
+    order: 2;
+    flex: 1;
+    min-width: 16px;
+    margin-bottom: 9px;
+    border-bottom: 2px dotted var(--line-strong);
+}
+
+.service-meta span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.service-meta span:first-child {
+    order: 1;
+}
+
+.service-meta span:last-child {
+    order: 3;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.service-meta small,
+.service-detail-meta small {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: lowercase;
+}
+
+.service-meta small::first-letter,
+.service-detail-meta small::first-letter {
+    text-transform: uppercase;
+}
+
+.service-meta strong {
+    color: var(--plum);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.service-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.service-actions .button {
+    flex: 1;
+    padding: 0 14px;
+}
+
+/* Страница отдельной услуги */
+.back-link {
+    display: inline-flex;
+    margin-bottom: 26px;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    color: var(--berry);
+}
+
+.service-detail-card {
+    position: relative;
+    padding: 56px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    box-shadow: var(--shadow-soft);
+}
+
+.service-detail-symbol {
+    position: absolute;
+    top: 44px;
+    right: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: linear-gradient(150deg, #d36a92, #a3325f);
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 32px;
+    line-height: 1;
+}
+
+.service-detail-card h2 {
+    max-width: 14ch;
+    margin: 0 0 22px;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.08;
+}
+
+.service-detail-description {
+    max-width: 60ch;
+    margin: 0;
+    font-size: 17.5px;
+    line-height: 1.75;
+}
+
+.service-detail-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 40px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.service-detail-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 24px 0;
+}
+
+.service-detail-meta > div + div {
+    padding-left: 32px;
+    border-left: 1px solid var(--line);
+}
+
+.service-detail-meta strong {
+    color: var(--plum);
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.service-detail-button {
+    width: 100%;
+    min-height: 58px;
+    font-size: 16px;
+}
+
+/* ==========================================================================
+   КАТЕГОРИИ — крупные «образцы»
+   ========================================================================== */
+
+.categories-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.category-card {
+    --tint: #f3dde4;
+    --tint-hover: #ecc9d8;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 200px;
+    padding: 28px;
+    background: var(--tint);
+    border-radius: var(--r-card);
+    transition: background-color 0.25s ease;
+}
+
+.category-card:nth-child(5n + 2) { --tint: #e6dcef; --tint-hover: #d8c8e6; }
+.category-card:nth-child(5n + 3) { --tint: #f3e6d2; --tint-hover: #ead5b5; }
+.category-card:nth-child(5n + 4) { --tint: #dfe9e2; --tint-hover: #cddbd2; }
+.category-card:nth-child(5n + 5) { --tint: #f1dedb; --tint-hover: #e7c8c3; }
+
+.category-card:hover {
+    background: var(--tint-hover);
+}
+
+.category-card::before {
+    content: '✿';
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    color: var(--plum);
+    font-size: 20px;
+    line-height: 1;
+    opacity: 0.55;
+}
+
+.category-card h3 {
+    font-size: 28px;
+    line-height: 1.15;
+}
+
+/* Вся плитка кликабельна */
+.category-card h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+/* ==========================================================================
+   МАСТЕРА — портреты в арках
+   ========================================================================== */
+
+.employee-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 56px 36px;
+}
+
+.employee-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.employee-photo-wrap {
+    position: relative;
+    margin: 10px 10px 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 999px 999px 24px 24px;
+    background: var(--blush);
+    outline: 1px solid rgba(181, 138, 75, 0.7);
+    outline-offset: 9px;
 }
 
 .employee-photo {
     display: block;
     width: 100%;
-    height: 250px;
-    margin-bottom: 18px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 13px;
+    object-position: center 22%;
+}
+
+.employee-photo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, var(--blush-soft), var(--blush));
+    color: var(--berry);
+    font-size: 64px;
+    line-height: 1;
+}
+
+.employee-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-top: 34px;
+}
+
+/* У каждого мастера одна и та же подпись — убираем как лишний шум */
+.employee-card .section-eyebrow {
+    display: none;
+}
+
+.employee-card h3 {
+    font-size: 29px;
+    line-height: 1.15;
+}
+
+.employee-position {
+    margin: 6px 0 0;
+    color: var(--brass-deep);
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .employee-services {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border);
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
 }
 
 .employee-services h4 {
-    margin: 0 0 10px;
-    font-size: 17px;
+    margin: 0 0 12px;
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.employee-services ul {
+.employee-services p {
+    font-size: 14px;
+}
+
+.employee-service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.employee-service-tags a {
+    padding: 6px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.employee-service-tags a:hover {
+    background: var(--berry);
+    border-color: var(--berry);
+    color: #fff;
+}
+
+.employee-contact {
+    margin: 18px 0 22px;
+}
+
+.employee-contact p {
     margin: 0;
-    padding-left: 20px;
+    font-size: 14.5px;
 }
 
-.employee-services li {
-    margin-bottom: 6px;
-    color: var(--muted);
+.employee-book-button {
+    margin-top: auto;
+    width: 100%;
 }
 
-/* ========================================
-   REVIEWS
-======================================== */
+/* ==========================================================================
+   ФОРМЫ (запись, отзывы, вход)
+   ========================================================================== */
 
-.reviews-page {
-    max-width: 950px;
-    margin: 65px auto;
-    padding: 0 25px;
+.appointment-form,
+.review-form-section {
+    padding: 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    box-shadow: var(--shadow-soft);
 }
 
-.reviews-page > p {
-    text-align: center;
-    margin-bottom: 35px;
+.appointment-form,
+.review-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 8px;
+    align-content: start;
 }
 
-.review-form-section,
-.review-card {
-    margin: 25px 0;
-    padding: 30px;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: var(--white);
-    box-shadow: var(--shadow);
+.appointment-form {
+    padding: 36px;
+}
+
+.appointment-form label,
+.review-form label,
+.auth-form label {
+    margin-top: 12px;
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.appointment-form input,
+.appointment-form select,
+.appointment-form textarea,
+.review-form input,
+.review-form select,
+.review-form textarea,
+.auth-form input {
+    width: 100%;
+    min-height: 52px;
+    padding: 13px 16px;
+    background-color: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-field);
+    color: var(--ink);
+    font-size: 15.5px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.appointment-form input:focus,
+.appointment-form select:focus,
+.appointment-form textarea:focus,
+.review-form input:focus,
+.review-form select:focus,
+.review-form textarea:focus,
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--berry);
+    box-shadow: 0 0 0 4px rgba(163, 50, 95, 0.14);
+}
+
+.appointment-form textarea,
+.review-form textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+::placeholder {
+    color: #a898ad;
+    opacity: 1;
+}
+
+.appointment-form select,
+.review-form select {
+    padding-right: 46px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%235f4b66' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+}
+
+.appointment-form input[type="date"],
+.appointment-form input[type="time"] {
+    color-scheme: light;
+}
+
+.appointment-form button,
+.review-form button,
+.auth-form button {
+    width: 100%;
+    min-height: 54px;
+    margin-top: 22px;
+    padding: 0 26px;
+    background: var(--berry);
+    border: 0;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 15.5px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.appointment-form button:hover,
+.review-form button:hover,
+.auth-form button:hover {
+    background: var(--berry-deep);
+}
+
+/* Форма записи: пары «услуга / мастер» и «дата / время» в два столбца.
+   Расстановка опирается на порядок полей в view/appointments.php */
+.appointment-form > :nth-child(1)  { grid-area: 1 / 1; }
+.appointment-form > :nth-child(2)  { grid-area: 2 / 1; }
+.appointment-form > :nth-child(3)  { grid-area: 1 / 2; }
+.appointment-form > :nth-child(4)  { grid-area: 2 / 2; }
+.appointment-form > :nth-child(5)  { grid-area: 3 / 1; }
+.appointment-form > :nth-child(6)  { grid-area: 4 / 1; }
+.appointment-form > :nth-child(7)  { grid-area: 3 / 2; }
+.appointment-form > :nth-child(8)  { grid-area: 4 / 2; }
+.appointment-form > :nth-child(9)  { grid-area: 5 / 1 / auto / -1; }
+.appointment-form > :nth-child(10) { grid-area: 6 / 1 / auto / -1; }
+.appointment-form > :nth-child(11) { grid-area: 7 / 1 / auto / -1; }
+
+/* ==========================================================================
+   МОИ ЗАПИСИ
+   ========================================================================== */
+
+.appointments-page > a:not(.button) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 50px;
+    padding: 0 28px;
+    background: var(--berry);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.appointments-page > a:not(.button):hover {
+    background: var(--berry-deep);
+}
+
+.appointment-card {
+    margin: 0 0 18px;
+    padding: 30px 32px 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+}
+
+.appointment-card h3 {
+    margin: 0 0 14px;
+    font-size: 26px;
+}
+
+/* «Мастер ······· Анна Мяги» */
+.appointment-card p {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 0;
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--line-strong);
+    font-size: 15px;
+    color: var(--ink);
+}
+
+.appointment-card p strong {
+    flex: none;
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+.appointment-card form {
+    margin: 0;
+}
+
+.appointment-card button {
+    min-height: 44px;
+    margin-top: 22px;
+    padding: 0 22px;
+    background: transparent;
+    border: 1px solid #e3b6c3;
+    border-radius: 999px;
+    color: #8d1f46;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.appointment-card button:hover {
+    background: #8d1f46;
+    border-color: #8d1f46;
+    color: #fff;
+}
+
+/* Статус-бейдж (создаётся в public/js/main.js; без JS остаётся обычным текстом) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--blush-soft);
+    color: var(--berry-deep);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.status-badge::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-badge[data-status="pending"]   { background: #fbf0d9; color: #85580e; }
+.status-badge[data-status="confirmed"] { background: #e3f1e9; color: #1f6b45; }
+.status-badge[data-status="completed"] { background: #ece6f3; color: #5b3d82; }
+.status-badge[data-status="cancelled"] { background: #f6e6ea; color: #8a3a46; }
+
+/* ==========================================================================
+   ОТЗЫВЫ
+   ========================================================================== */
+
+.review-form-section {
+    margin-bottom: 64px;
 }
 
 .review-form-section h3,
-.reviews-list h3 {
-    font-size: 25px;
+.reviews-list > h3 {
+    margin: 0 0 20px;
+    font-size: 30px;
 }
 
-.review-form {
+.review-form-section h3 {
+    margin-bottom: 8px;
+}
+
+.reviews-page > p a {
+    color: var(--berry);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Форма отзыва: «услуга / оценка» рядом, комментарий на всю ширину */
+.review-form > :nth-child(1) { grid-area: 1 / 1; }
+.review-form > :nth-child(2) { grid-area: 2 / 1; }
+.review-form > :nth-child(3) { grid-area: 1 / 2; }
+.review-form > :nth-child(4) { grid-area: 2 / 2; }
+.review-form > :nth-child(5) { grid-area: 3 / 1 / auto / -1; }
+.review-form > :nth-child(6) { grid-area: 4 / 1 / auto / -1; }
+.review-form > :nth-child(7) { grid-area: 5 / 1 / auto / -1; }
+
+.reviews-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.reviews-list > h3,
+.reviews-list > p {
+    grid-column: 1 / -1;
+}
+
+.review-card {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    min-width: 0;
+    padding: 30px 32px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
 }
 
-.review-form label {
-    font-weight: 600;
-    color: var(--text);
-}
-
-.review-form input,
-.review-form select,
-.review-form textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #fffdfc;
-    color: var(--text);
-    font: inherit;
-    outline: none;
-    transition: border 0.3s, box-shadow 0.3s;
-}
-
-.review-form input:focus,
-.review-form select:focus,
-.review-form textarea:focus {
-    border-color: var(--pink);
-    box-shadow: 0 0 0 3px rgba(217, 166, 173, 0.15);
-}
-
-.review-form button {
-    margin-top: 10px;
-    padding: 14px 25px;
-    border: none;
-    border-radius: 30px;
-    background: var(--pink-dark);
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.review-form button:hover {
-    background: var(--text);
-    transform: translateY(-2px);
-}
-
-.review-card h4 {
-    margin-top: 0;
-    font-size: 21px;
-}
+.review-card .review-stars     { order: 1; }
+.review-card .review-comment   { order: 2; }
+.review-card h4                { order: 3; }
+.review-card p:not([class])    { order: 4; }
+.review-card small             { order: 5; }
 
 .review-stars {
-    color: #d5a54c;
-    font-size: 22px;
+    margin: 0 0 14px;
+    color: var(--brass);
+    font-size: 19px;
+    line-height: 1;
+    letter-spacing: 2px;
 }
 
 .review-comment {
-    overflow-wrap: anywhere;
-    white-space: normal;
+    flex: 1;
+    margin: 0 0 24px;
+    color: var(--ink);
+    font-size: 16.5px;
     line-height: 1.7;
+    overflow-wrap: anywhere;
 }
 
-.error-message,
-.auth-error {
-    color: #b42318;
-    background: #fff0ef;
-    padding: 12px 15px;
-    border-radius: 9px;
+.review-card h4 {
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 21px;
 }
 
-.success-message {
-    color: #187847;
-    background: #eaf8ef;
-    padding: 12px 15px;
-    border-radius: 9px;
+.review-card p:not([class]) {
+    margin: 2px 0 0;
+    font-size: 14px;
 }
 
-/* ========================================
-   AUTH PAGES
-======================================== */
+.review-card p strong {
+    font-weight: 600;
+}
+
+.review-card small {
+    margin-top: 10px;
+    color: #8f7d96;
+    font-size: 12.5px;
+}
+
+/* ==========================================================================
+   ВХОД И РЕГИСТРАЦИЯ
+   ========================================================================== */
+
+/* Страницы с формой входа центрируются по высоте экрана */
+body:has(.auth-page) .main-content {
+    display: grid;
+    place-items: center;
+    padding: 56px 16px;
+}
+
+/* Высокая арка за карточкой */
+body:has(.auth-page)::before {
+    content: '';
+    position: fixed;
+    top: 5vh;
+    left: 50%;
+    z-index: 0;
+    width: min(620px, 92vw);
+    height: 100vh;
+    border-radius: 999px 999px 0 0;
+    background: linear-gradient(180deg, var(--blush) 0%, rgba(240, 207, 220, 0) 85%);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
 
 .auth-page {
-    max-width: 480px;
-    margin: 65px auto;
-    padding: 40px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 1;
+    width: min(460px, 100%);
+    margin: 0 auto;
+    padding: 46px 40px 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    box-shadow: var(--shadow-soft);
+}
+
+.auth-page::before {
+    content: '✿';
+    display: block;
+    margin-bottom: 14px;
+    color: var(--berry);
+    font-size: 34px;
+    line-height: 1;
+    text-align: center;
 }
 
 .auth-page h2 {
-    font-size: 32px;
-    margin-top: 0;
-    margin-bottom: 30px;
+    margin: 0 0 30px;
+    font-size: 38px;
+    text-align: center;
+}
+
+.auth-page .language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+}
+
+.language-switcher a {
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+.auth-page .language-switcher a:hover {
+    color: var(--berry);
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .auth-form label {
-    font-weight: 600;
-    color: var(--text);
-}
-
-.auth-form input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font: inherit;
-    outline: none;
-}
-
-.auth-form input:focus {
-    border-color: var(--pink);
-    box-shadow: 0 0 0 3px rgba(217, 166, 173, 0.15);
-}
-
-.auth-form button {
-    margin-top: 15px;
-    padding: 14px;
-    border: none;
-    border-radius: 30px;
-    background: var(--pink-dark);
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.auth-form button:hover {
-    background: var(--text);
+    display: block;
 }
 
 .auth-page > p {
-    margin-top: 22px;
+    margin: 26px 0 0;
+    font-size: 14.5px;
     text-align: center;
 }
 
+.auth-page > p.auth-error {
+    margin: 0 0 12px;
+    text-align: left;
+}
+
 .auth-page > p a {
-    color: var(--pink-dark);
+    color: var(--berry);
     font-weight: 700;
 }
 
 .auth-page > p a:hover {
     text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
-/* ========================================
-   FOOTER
-======================================== */
+/* ==========================================================================
+   СТРАНИЦА 404 (в шаблоне нет обёртки — стилизуем прямых потомков main)
+   ========================================================================== */
+
+.main-content > h1 {
+    margin: 96px auto 0;
+    color: var(--berry);
+    font-size: clamp(96px, 18vw, 190px);
+    line-height: 1;
+    text-align: center;
+}
+
+.main-content > h2 {
+    margin: 12px auto 12px;
+    padding: 0 24px;
+    font-size: clamp(28px, 4vw, 42px);
+    text-align: center;
+}
+
+.main-content > p {
+    max-width: 46ch;
+    margin: 0 auto 28px;
+    padding: 0 24px;
+    text-align: center;
+}
+
+.main-content > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 50px;
+    margin: 0 auto 112px;
+    padding: 0 28px;
+    background: var(--berry);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.main-content > a:hover {
+    background: var(--berry-deep);
+}
+
+/* ==========================================================================
+   ПОДВАЛ
+   ========================================================================== */
 
 .site-footer {
-    margin-top: 60px;
-    padding: 45px 20px 20px;
-    background: #332c2b;
-    color: white;
+    margin-top: auto;
+    padding: 64px 24px 28px;
+    background: var(--plum);
+    color: var(--blush);
 }
 
 .footer-content {
-    max-width: 1150px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px 48px;
+    max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
 }
 
 .footer-logo span {
-    font-family: 'Playfair Display', serif;
-    font-size: 27px;
-    color: #f1d9d7;
+    display: block;
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1;
 }
 
 .footer-logo p {
-    color: #c8b9b5;
-    margin-top: 10px;
+    max-width: 36ch;
+    margin: 16px 0 0;
+    color: #d9bfd0;
 }
 
 .footer-bottom {
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,0.12);
+    flex: 1 0 100%;
+    margin-top: 8px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(240, 207, 220, 0.18);
 }
 
 .footer-bottom p {
-    font-size: 12px;
-    color: #b9aaa6;
+    margin: 0;
+    color: #b79bb0;
+    font-size: 13px;
 }
 
-/* ========================================
-   RESPONSIVE
-======================================== */
+/* ==========================================================================
+   АДАПТИВНОСТЬ
+   ========================================================================== */
 
-@media (max-width: 1000px) {
-
+@media (max-width: 1100px) {
+    /* Шапка в две строки: логотип + язык, ниже — прокручиваемое меню */
     .header-container {
-        flex-direction: column;
-        gap: 20px;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        padding: 12px 18px 8px;
     }
 
     .header-right {
-        align-items: center;
-        width: 100%;
-    }
-
-    .main-nav {
-        justify-content: center;
-        gap: 18px;
-    }
-
-    .services-list,
-    .employees-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-
-    .header-container {
-        padding: 20px 15px;
+        display: contents;
     }
 
     .logo {
-        font-size: 26px;
+        order: 1;
+    }
+
+    .site-header .language-switcher {
+        order: 2;
+        margin-left: auto;
     }
 
     .main-nav {
-        gap: 12px 17px;
+        order: 3;
+        flex: 0 0 calc(100% + 36px);
+        margin: 0 -18px;
+        padding: 0 14px 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .main-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .main-nav a {
-        font-size: 12px;
+        flex: none;
     }
 
-    h2 {
-        font-size: 29px;
+    .main-nav .nav-login {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 980px) {
+    .service-grid,
+    .categories-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .services-page,
-    .employees-page,
-    .reviews-page {
-        margin: 35px auto;
-        padding: 0 15px;
+    .employee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 48px 28px;
+    }
+}
+
+@media (max-width: 720px) {
+    .catalog-page,
+    .categories-page,
+    .reviews-page,
+    .appointments-page {
+        width: calc(100% - 32px);
+        margin: 44px auto 72px;
     }
 
-    .services-list,
-    .employees-list {
+    .service-detail-page {
+        width: calc(100% - 32px);
+        margin: 32px auto 72px;
+    }
+
+    .catalog-heading,
+    .categories-page > h2 {
+        margin-bottom: 36px;
+        padding-bottom: 28px;
+    }
+
+    .reviews-list {
         grid-template-columns: 1fr;
     }
 
-    .service-card,
-    .employee-card {
-        padding: 20px;
+    .service-detail-card {
+        padding: 32px 24px;
+        border-radius: 26px;
     }
 
-    .employee-photo {
-        height: 230px;
+    .service-detail-symbol {
+        top: 28px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
     }
 
-    .review-form-section,
-    .review-card {
-        padding: 20px;
+    .service-detail-card h2 {
+        max-width: calc(100% - 70px);
+    }
+
+    .service-detail-meta strong {
+        font-size: 30px;
+    }
+
+    .service-detail-meta > div + div {
+        padding-left: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .service-grid,
+    .categories-list,
+    .employee-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .employee-photo-wrap {
+        max-width: 340px;
+    }
+
+    .appointment-form,
+    .review-form-section {
+        padding: 24px 20px;
+        border-radius: 24px;
+    }
+
+    .review-form-section .review-form {
+        padding: 0;
+    }
+
+    /* На узких экранах поля идут в один столбец в естественном порядке */
+    .appointment-form,
+    .review-form {
+        grid-template-columns: 1fr;
+    }
+
+    .appointment-form > :nth-child(n),
+    .review-form > :nth-child(n) {
+        grid-area: auto;
+    }
+
+    .appointment-card {
+        padding: 24px 20px;
     }
 
     .auth-page {
-        margin: 30px 15px;
-        padding: 25px 20px;
+        padding: 40px 22px 28px;
+        border-radius: 26px;
+    }
+
+    .auth-page h2 {
+        font-size: 32px;
     }
 
     .site-footer {
-        margin-top: 35px;
+        padding: 48px 20px 24px;
     }
 }
 
-/* ========================================
-   ЕДИНАЯ СИСТЕМА ВЫРАВНИВАНИЯ
-======================================== */
-
-body {
-    font-family: 'DM Sans', sans-serif;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Playfair Display', serif;
-}
-
-.services-page,
-.employees-page,
-.reviews-page,
-.auth-page {
-    width: min(1150px, calc(100% - 40px));
-    margin: 60px auto;
-}
-
-.services-page > h2,
-.employees-page > h2,
-.reviews-page > h2,
-.auth-page > h2 {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.services-page > p,
-.employees-page > p,
-.reviews-page > p {
-    text-align: center;
-    max-width: 750px;
-    margin: 0 auto 35px;
-}
-
-.auth-page {
-    max-width: 480px;
-    padding: 40px;
-}
-
-.auth-page h2 {
-    text-align: center;
-}
-
-.auth-page .auth-form {
-    text-align: left;
-}
-
-.auth-page .auth-form label {
-    display: block;
-}
-
-.auth-page .auth-form input {
-    width: 100%;
-}
-
-@media (max-width: 600px) {
-    .services-page,
-    .employees-page,
-    .reviews-page {
-        width: calc(100% - 30px);
-        margin: 35px auto;
+/* Уважаем настройку «уменьшить анимацию» */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
     }
 
-    .auth-page {
-        width: calc(100% - 30px);
-        padding: 25px 20px;
-        margin: 30px auto;
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
     }
 }

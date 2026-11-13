@@ -1,0 +1,408 @@
+/* ==========================================================================
+   ГЛАВНАЯ СТРАНИЦА
+   Подключается поверх mystyle.css (переменные берутся оттуда).
+   Единственное «громкое» место сайта — главный экран: слива и арка.
+   ========================================================================== */
+
+.home-page {
+    width: min(1200px, calc(100% - 48px));
+    margin: 32px auto 104px;
+}
+
+/* ---------- Главный экран ---------- */
+
+.home-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+    align-items: center;
+    gap: 56px;
+    min-height: 600px;
+    padding: 72px 76px 72px 84px;
+    overflow: hidden;
+    border-radius: 36px;
+    background: var(--plum);
+    color: var(--paper);
+}
+
+.home-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.home-eyebrow {
+    display: inline-block;
+    margin-bottom: 26px;
+    padding-left: 42px;
+    background: linear-gradient(currentColor, currentColor) no-repeat left center / 28px 1px;
+    color: #d8b377;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-transform: lowercase;
+}
+
+.home-eyebrow::first-letter {
+    text-transform: uppercase;
+}
+
+.home-hero h1 {
+    margin: 0 0 26px;
+    color: var(--paper);
+    font-size: clamp(38px, 4.3vw, 60px);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+}
+
+/* Заголовок делится на две строки, без цветовых акцентов */
+.home-hero h1 span {
+    display: block;
+}
+
+.home-hero-description {
+    max-width: 46ch;
+    margin: 0 0 38px;
+    color: #dcc6d6;
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+.home-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    padding: 0 30px;
+    border: 1px solid var(--blush);
+    border-radius: 999px;
+    background: var(--blush);
+    color: var(--plum);
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.home-button:hover {
+    border-color: #fff;
+    background: #fff;
+    color: var(--plum);
+}
+
+.home-button-secondary {
+    border-color: rgba(247, 241, 243, 0.4);
+    background: transparent;
+    color: var(--paper);
+}
+
+.home-button-secondary:hover {
+    border-color: var(--paper);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* ---------- Арка (вместо круга) ---------- */
+
+.home-hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-visual-circle {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 4 / 5;
+    padding: 14px;
+    border-radius: 999px 999px 28px 28px;
+    background: linear-gradient(180deg, var(--blush) 0%, #e6afc4 100%);
+}
+
+/* Тонкая латунная рамка-«зеркало» вокруг арки */
+.home-visual-circle::before {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border: 1px solid rgba(216, 179, 119, 0.75);
+    border-radius: 999px 999px 40px 40px;
+    pointer-events: none;
+}
+
+.home-visual-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 22% 0 11%;
+    border: 1px solid rgba(58, 29, 68, 0.22);
+    border-radius: 999px 999px 16px 16px;
+    color: var(--plum);
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3.4vw, 44px);
+    line-height: 1;
+    text-align: center;
+}
+
+.home-visual-inner::before {
+    content: '✿';
+    color: var(--berry);
+    font-size: 72px;
+    line-height: 1;
+}
+
+.home-visual-label {
+    position: absolute;
+    left: -6%;
+    top: 47%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    background: var(--paper);
+    box-shadow: 0 18px 36px -16px rgba(0, 0, 0, 0.5);
+    color: var(--plum);
+    font-family: var(--font-display);
+    font-size: 17px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.home-visual-label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--berry);
+}
+
+/* ---------- Преимущества: без карточек, на тонких линиях ---------- */
+
+.home-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 56px;
+    margin-top: 96px;
+}
+
+.home-benefit {
+    padding-top: 32px;
+    border-top: 1px solid var(--line-strong);
+}
+
+.home-benefit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 64px;
+    margin: 0 0 28px;
+    border-radius: 999px 999px 10px 10px;
+    background: var(--blush);
+    color: var(--berry);
+    font-size: 22px;
+    line-height: 1;
+}
+
+.home-benefit h3 {
+    margin: 0 0 10px;
+    font-size: 27px;
+}
+
+.home-benefit p {
+    max-width: 34ch;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* ---------- Призыв к действию ---------- */
+
+.home-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 48px;
+    margin-top: 96px;
+    padding: 64px 72px;
+    border-radius: 36px;
+    background: var(--berry);
+}
+
+.home-cta h2 {
+    grid-column: 1;
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: clamp(30px, 3.6vw, 46px);
+    text-align: left;
+}
+
+.home-cta p {
+    grid-column: 1;
+    max-width: 46ch;
+    margin: 0;
+    color: #f8dce7;
+    font-size: 17px;
+}
+
+.home-cta .home-button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    border-color: #fff;
+    background: #fff;
+    color: var(--berry-deep);
+}
+
+.home-cta .home-button:hover {
+    border-color: var(--plum);
+    background: var(--plum);
+    color: #fff;
+}
+
+/* ---------- Появление при загрузке: одна последовательность ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+    .home-hero-content > * {
+        animation: home-rise 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    }
+
+    .home-hero-content > :nth-child(2) { animation-delay: 0.08s; }
+    .home-hero-content > :nth-child(3) { animation-delay: 0.16s; }
+    .home-hero-content > :nth-child(4) { animation-delay: 0.24s; }
+
+    .home-visual-circle {
+        animation: home-arch 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards;
+    }
+
+    .home-visual-label {
+        animation: home-fade 0.7s ease 1.15s backwards;
+    }
+}
+
+@keyframes home-rise {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+}
+
+@keyframes home-arch {
+    from {
+        clip-path: inset(100% -40px -40px -40px);
+    }
+    to {
+        clip-path: inset(-40px -40px -40px -40px);
+    }
+}
+
+@keyframes home-fade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+/* ---------- Адаптивность ---------- */
+
+@media (max-width: 980px) {
+    .home-hero {
+        grid-template-columns: 1fr;
+        gap: 56px;
+        min-height: 0;
+        padding: 56px 40px 64px;
+    }
+
+    .home-hero-visual {
+        justify-content: flex-start;
+        padding-left: 16px;
+    }
+
+    .home-visual-circle {
+        max-width: 300px;
+    }
+
+    .home-benefits {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        margin-top: 72px;
+    }
+
+    .home-benefit {
+        display: grid;
+        grid-template-columns: 52px 1fr;
+        column-gap: 24px;
+        align-items: start;
+    }
+
+    .home-benefit-icon {
+        grid-row: 1 / span 2;
+        margin: 0;
+    }
+
+    .home-cta {
+        grid-template-columns: 1fr;
+        row-gap: 28px;
+        margin-top: 72px;
+        padding: 48px 36px;
+    }
+
+    .home-cta .home-button {
+        grid-column: 1;
+        grid-row: auto;
+        justify-self: start;
+    }
+}
+
+@media (max-width: 520px) {
+    .home-page {
+        width: calc(100% - 24px);
+        margin: 12px auto 72px;
+    }
+
+    .home-hero {
+        padding: 44px 24px 56px;
+        border-radius: 28px;
+    }
+
+    .home-hero-description {
+        font-size: 16px;
+    }
+
+    .home-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home-visual-circle {
+        max-width: 250px;
+    }
+
+    .home-visual-circle::before {
+        inset: -12px;
+    }
+
+    .home-visual-label {
+        left: -8px;
+        font-size: 15px;
+    }
+
+    .home-cta {
+        padding: 40px 24px;
+        border-radius: 28px;
+    }
+
+    .home-cta .home-button {
+        justify-self: stretch;
+    }
+}

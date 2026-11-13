@@ -1,0 +1,185 @@
+/* ==========================================================================
+   ILUSALONG — необязательные улучшения интерфейса
+   Сайт и админка полностью работают и без этого файла: здесь только то,
+   что нельзя сделать одним CSS. Ничего не отправляет и не меняет данные.
+
+   1. Подсвечивает текущий раздел в меню (aria-current="page").
+   2. Тень у шапки при прокрутке.
+   3. Форма записи: подставляет услугу и мастера из ссылки
+      (?service_id=…&employee_id=…) — ссылки «Записаться» на страницах
+      услуг и мастеров уже передают эти параметры.
+   4. Статусы записей (в «Моих записях» и в админке) — цветные бейджи.
+   ========================================================================== */
+
+(function () {
+    'use strict';
+
+    function ready(fn) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fn);
+        } else {
+            fn();
+        }
+    }
+
+    function cleanPath(path) {
+        return path.replace(/\/+$/, '');
+    }
+
+    /* ---------- 1. Текущий раздел в меню ---------- */
+
+    function markCurrentNav() {
+        var path = cleanPath(location.pathname);
+        var lastSegment = path.split('/').pop();
+
+        // «Страница услуги» относится к разделу «Услуги»
+        var aliases = { service: 'services' };
+        var currentSegment = aliases[lastSegment] || lastSegment;
+
+        // Сайт
+        var siteLinks = document.querySelectorAll('.main-nav a:not(.nav-login)');
+        siteLinks.forEach(function (link) {
+            var segment = cleanPath(new URL(link.href, location.href).pathname).split('/').pop();
+            if (segment && segment === currentSegment) {
+                link.setAttribute('aria-current', 'page');
+            }
+        });
+
+        // Админка
+        var adminLinks = document.querySelectorAll('.admin-header nav a');
+        adminLinks.forEach(function (link) {
+            var href = cleanPath(new URL(link.href, location.href).pathname);
+            if (/\/logout$/.test(href)) {
+                return;
+            }
+            var isAdminRoot = /\/ilusalong_admin$/.test(href);
+            var match = isAdminRoot
+                ? path === href || /\/ilusalong_admin\/index(\.php)?$/.test(path)
+                : path === href || path.indexOf(href + '/') === 0;
+            if (match) {
+                link.setAttribute('aria-current', 'page');
+            }
+        });
+
+        // На узких экранах меню прокручивается — показываем активный пункт
+        var nav = document.querySelector('.main-nav');
+        var active = nav && nav.querySelector('[aria-current="page"]');
+        if (active && nav.scrollWidth > nav.clientWidth) {
+            nav.scrollLeft = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
+        }
+    }
+
+    /* ---------- 2. Тень шапки ---------- */
+
+    function headerShadow() {
+        var header = document.querySelector('.site-header');
+        if (!header) {
+            return;
+        }
+        var update = function () {
+            header.classList.toggle('is-scrolled', window.scrollY > 8);
+        };
+        window.addEventListener('scroll', update, { passive: true });
+        update();
+    }
+
+    /* ---------- 3. Предвыбор услуги и мастера ---------- */
+
+    function prefillBooking() {
+        var form = document.querySelector('.appointment-form');
+        if (!form) {
+            return;
+        }
+        var params = new URLSearchParams(location.search);
+
+        ['service_id', 'employee_id'].forEach(function (name) {
+            var value = params.get(name);
+            var select = form.querySelector('select[name="' + name + '"]');
+            if (!value || !select) {
+                return;
+            }
+            var exists = Array.prototype.some.call(select.options, function (option) {
+                return option.value === value;
+            });
+            if (exists) {
+                select.value = value;
+            }
+        });
+    }
+
+    /* ---------- 4. Бейджи статусов ---------- */
+
+    var STATUS_BY_TEXT = {
+        // сырые значения из базы
+        'pending': 'pending',
+        'confirmed': 'confirmed',
+        'completed': 'completed',
+        'cancelled': 'cancelled',
+        // русские подписи (view/my-appointments.php)
+        'ожидает подтверждения': 'pending',
+        'подтверждена': 'confirmed',
+        'завершена': 'completed',
+        'отменена': 'cancelled',
+        // эстонские подписи
+        'ootel': 'pending',
+        'kinnitatud': 'confirmed',
+        'lõpetatud': 'completed',
+        'tühistatud': 'cancelled'
+    };
+
+    function statusKey(text) {
+        return STATUS_BY_TEXT[text.trim().toLowerCase()] || null;
+    }
+
+    function makeBadge(text, key) {
+        var badge = document.createElement('span');
+        badge.className = 'status-badge';
+        badge.setAttribute('data-status', key);
+        badge.textContent = text.trim();
+        return badge;
+    }
+
+    function badgeAppointments() {
+        // «Мои записи»: <p><strong>Статус:</strong> Подтверждена</p>
+        document.querySelectorAll('.appointment-card p').forEach(function (p) {
+            var label = p.querySelector('strong');
+            var textNode = label && label.nextSibling;
+            if (!textNode || textNode.nodeType !== Node.TEXT_NODE) {
+                return;
+            }
+            var key = statusKey(textNode.textContent);
+            if (!key) {
+                return;
+            }
+            p.replaceChild(makeBadge(textNode.textContent, key), textNode);
+            p.closest('.appointment-card').setAttribute('data-status', key);
+        });
+
+        // Админка: колонка «Staatus» в таблице
+        document.querySelectorAll('.admin-main table').forEach(function (table) {
+            var headers = Array.prototype.slice.call(table.querySelectorAll('thead th'));
+            var column = headers.findIndex(function (th) {
+                return /^(staatus|status|статус)$/i.test(th.textContent.trim());
+            });
+            if (column < 0) {
+                return;
+            }
+            table.querySelectorAll('tbody tr').forEach(function (row) {
+                var cell = row.children[column];
+                var key = cell && statusKey(cell.textContent);
+                if (key) {
+                    var text = cell.textContent;
+                    cell.textContent = '';
+                    cell.appendChild(makeBadge(text, key));
+                }
+            });
+        });
+    }
+
+    ready(function () {
+        markCurrentNav();
+        headerShadow();
+        prefillBooking();
+        badgeAppointments();
+    });
+})();

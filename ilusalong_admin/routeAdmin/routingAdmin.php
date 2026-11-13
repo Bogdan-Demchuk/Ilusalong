@@ -87,7 +87,7 @@ switch ($path) {
         break;
 
     case 'reviews':
-        $response = ControllerAdminRevies::index();
+        $response = ControllerAdminReviews::index();
         break;
 
     default:

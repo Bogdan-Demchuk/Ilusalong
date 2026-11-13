@@ -14,6 +14,7 @@
             <tr>
                 <th>ID</th>
                 <th>Kasutaja</th>
+                <th>Teenuse nimi</th>
                 <th>Hinnang</th>
                 <th>Kommentaar</th>
                 <th>Kuupäev</th>
@@ -25,8 +26,12 @@
                     <td>
                         <?= htmlspecialchars((string) ($review['id'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                     </td>
+                   <td>
+                        <?= htmlspecialchars((string) ($review['client_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                    </td>
+
                     <td>
-                        <?= htmlspecialchars((string) ($review['user_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        <?= htmlspecialchars((string) ($review['service_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                     </td>
                     <td>
                         <?= htmlspecialchars((string) ($review['rating'] ?? ''), ENT_QUOTES, 'UTF-8') ?>

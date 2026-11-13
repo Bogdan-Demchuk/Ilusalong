@@ -16,7 +16,7 @@ require_once __DIR__ . '/controllerAdmin/controllerAdmin.php';
 require_once __DIR__ . '/controllerAdmin/controllerAdminAppointments.php';
 require_once __DIR__ . '/controllerAdmin/controllerAdminCategory.php';
 require_once __DIR__ . '/controllerAdmin/controllerAdminEmployees.php';
-require_once __DIR__ . '/controllerAdmin/controllerAdminRevies.php';
+require_once __DIR__ . '/controllerAdmin/controllerAdminReviews.php';
 require_once __DIR__ . '/controllerAdmin/controllerAdminServices.php';
 
 require_once __DIR__ . '/routeAdmin/routingAdmin.php';

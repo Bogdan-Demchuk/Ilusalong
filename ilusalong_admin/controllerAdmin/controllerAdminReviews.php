@@ -1,6 +1,6 @@
 <?php
 
-class ControllerAdminRevies
+class ControllerAdminReviews
 {
     public static function index()
     {
@@ -11,13 +11,22 @@ class ControllerAdminRevies
 
         if (!Auth::isAdmin()) {
             http_response_code(403);
-            return '403 — Juurdepääs keelatud';
+
+            $content = '<h2>403 — Juurdepääs keelatud</h2>';
+
+            ob_start();
+            include __DIR__ . '/../viewAdmin/templates/layout.php';
+            return ob_get_clean();
         }
 
         $reviews = ModelAdminReviews::getAll();
 
         ob_start();
         include __DIR__ . '/../viewAdmin/reviewsList.php';
+        $content = ob_get_clean();
+
+        ob_start();
+        include __DIR__ . '/../viewAdmin/templates/layout.php';
         return ob_get_clean();
     }
 }

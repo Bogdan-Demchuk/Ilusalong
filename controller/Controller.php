@@ -63,6 +63,8 @@ class Controller
                 $error = 'Palun täida kõik kohustuslikud väljad.';
             } elseif ($date < date('Y-m-d')) {
                 $error = 'Kuupäev ei saa olla minevikus.';
+            } elseif (!Employees::canPerformService($employeeId, $serviceId)) {
+                $error = 'Valitud meister ei paku seda teenust.';
             } else {
                 try {
                     $result = Appointments::createAppointment(
@@ -92,6 +94,18 @@ class Controller
 
         $services = Services::getAllServices();
         $employees = Employees::getAllEmployees();
+
+        $employeeServices = [];
+
+        foreach ($employees as $employee) {
+            $employeeServices[$employee['id']] = array_map(
+                'intval',
+                array_column(
+                    Employees::getEmployeeServices($employee['id']),
+                    'id'
+                )
+            );
+        }
 
         include 'view/appointments.php';
     }

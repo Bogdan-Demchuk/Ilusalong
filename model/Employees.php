@@ -6,10 +6,9 @@ class Employees
     {
         $db = new Database();
 
-        $query = "SELECT * FROM employees";
-
-        return $db->getAll($query);
+        return $db->getAll("SELECT * FROM employees");
     }
+
     public static function getEmployeeServices($employeeId)
     {
         $db = new Database();
@@ -23,7 +22,22 @@ class Employees
             INNER JOIN services
                 ON employee_services.service_id = services.id
             WHERE employee_services.employee_id = ?',
-            [$employeeId]
+            [(int)$employeeId]
         );
+    }
+
+    public static function canPerformService($employeeId, $serviceId)
+    {
+        $db = new Database();
+
+        $result = $db->getOne(
+            'SELECT id
+             FROM employee_services
+             WHERE employee_id = ?
+             AND service_id = ?',
+            [(int)$employeeId, (int)$serviceId]
+        );
+
+        return !empty($result);
     }
 }

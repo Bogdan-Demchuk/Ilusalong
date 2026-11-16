@@ -15,6 +15,14 @@ if (empty($employees)) {
 } else {
     $content .= '<div class="employee-grid">';
 
+    $employeePhotos = [
+        1 => 'kadriorg.jpg',
+        2 => 'marina.jpg',
+        3 => 'liis.jpg',
+        4 => 'anna.jpg',
+        5 => 'kristina.jpg'
+    ];
+
     foreach ($employees as $employee) {
         $employeeId = (int) $employee['id'];
         $employeeServices = Employees::getEmployeeServices($employeeId);
@@ -35,12 +43,19 @@ if (empty($employees)) {
             $position = $positionTranslations[$position] ?? $position;
         }
 
-        $photo = '';
+        $photoFile = $employeePhotos[$employeeId] ?? '';
 
         if (!empty($employee['photo'])) {
-            $photo = '<img class="employee-photo" src="/ilusalong/images/' .
-                rawurlencode(basename($employee['photo'])) .
-                '" alt="' . htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') . '">';
+            $photoFile = basename($employee['photo']);
+        }
+
+        if ($photoFile !== '') {
+            $photo = '<img class="employee-photo"
+                src="/ilusalong/public/images/employees/' .
+                rawurlencode($photoFile) .
+                '"
+                alt="' . htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') . '"
+                loading="lazy">';
         } else {
             $photo = '<div class="employee-photo-placeholder">✿</div>';
         }
@@ -53,6 +68,7 @@ if (empty($employees)) {
                 </div>
 
                 <div class="employee-card-content">
+
                     <span class="section-eyebrow">' .
                         t('НАШ СПЕЦИАЛИСТ', 'MEIE SPETSIALIST') .
                     '</span>
@@ -90,6 +106,8 @@ if (empty($employees)) {
         }
 
         $content .= '
+                    </div>
+
                     <div class="employee-contact">
                         <p>' . t('Телефон', 'Telefon') . ': ' .
                             htmlspecialchars($employee['phone'] ?? '', ENT_QUOTES, 'UTF-8') .
@@ -100,6 +118,7 @@ if (empty($employees)) {
                        href="/ilusalong/appointments?employee_id=' . $employeeId . '">
                         ' . t('Записаться к мастеру', 'Broneeri aeg meistri juurde') . '
                     </a>
+
                 </div>
             </article>
         ';

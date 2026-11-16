@@ -15,6 +15,21 @@ if (empty($services)) {
 } else {
     $content .= '<div class="service-grid">';
 
+    $servicePhotos = [
+        1 => 'haircut.jpg',
+        2 => 'hair-coloring.jpg',
+        3 => 'hair-care.jpg',
+        4 => 'manicure.jpg',
+        5 => 'gel-polish.jpg',
+        6 => 'pedicure.jpg',
+        7 => 'facial-care.jpg',
+        8 => 'facial-care.jpg',
+        9 => 'day-makeup.jpg',
+        10 => 'evening-makeup.jpg',
+        11 => 'massage.jpg',
+        12 => 'massage.jpg'
+    ];
+
     foreach ($services as $service) {
         $isEt = ($_SESSION['lang'] ?? 'ru') === 'et';
 
@@ -28,11 +43,26 @@ if (empty($services)) {
 
         $id = (int) $service['id'];
 
+        $photoFile = $servicePhotos[$id] ?? '';
+
+        $photo = $photoFile !== ''
+            ? '<img class="service-photo"
+                src="/ilusalong/public/images/services/' .
+                rawurlencode($photoFile) .
+                '"
+                alt="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '"
+                loading="lazy">'
+            : '';
+
         $content .= '
             <article class="service-card">
+
+                <div class="service-card-image">
+                    ' . $photo . '
+                </div>
+
                 <div class="service-card-top">
                     <span class="service-number">ILU / ' . str_pad((string)$id, 2, '0', STR_PAD_LEFT) . '</span>
-                    <span class="service-symbol">✿</span>
                 </div>
 
                 <h3>' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</h3>
@@ -60,6 +90,7 @@ if (empty($services)) {
                         ' . t('Записаться', 'Broneeri') . '
                     </a>
                 </div>
+
             </article>
         ';
     }

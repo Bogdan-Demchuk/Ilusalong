@@ -5,7 +5,12 @@ ob_start();
 <div class="appointments-page">
     <h2><?= t('Записаться на приём', 'Broneeri aeg') ?></h2>
 
-    <p><?= t('Выберите услугу, мастера и удобное время.', 'Vali teenus, meister ja sobiv aeg.') ?></p>
+    <p>
+        <?= t(
+            'Выберите услугу, мастера и удобное время.',
+            'Vali teenus, meister ja sobiv aeg.'
+        ) ?>
+    </p>
 
     <?php if (!empty($error)): ?>
         <p class="error-message">
@@ -47,13 +52,23 @@ ob_start();
             <?= t('Мастер', 'Meister') ?>
         </label>
 
-        <select name="employee_id" id="employee_id" required>
+        <select name="employee_id" id="employee_id" required disabled>
             <option value="">
-                <?= t('Выберите мастера', 'Vali meister') ?>
+                <?= t(
+                    'Сначала выберите услугу',
+                    'Vali kõigepealt teenus'
+                ) ?>
             </option>
 
             <?php foreach ($employees as $employee): ?>
-                <option value="<?= (int)$employee['id'] ?>">
+                <option
+                    value="<?= (int)$employee['id'] ?>"
+                    data-services="<?= htmlspecialchars(
+                        implode(',', $employeeServices[$employee['id']] ?? []),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
+                >
                     <?= htmlspecialchars(
                         $employee['first_name'] . ' ' . $employee['last_name'],
                         ENT_QUOTES,
@@ -94,7 +109,10 @@ ob_start();
             name="comment"
             id="comment"
             rows="4"
-            placeholder="<?= t('Пожелания или дополнительная информация...', 'Soovid või lisainfo...') ?>"
+            placeholder="<?= t(
+                'Пожелания или дополнительная информация...',
+                'Soovid või lisainfo...'
+            ) ?>"
         ></textarea>
 
         <button type="submit">
@@ -103,6 +121,66 @@ ob_start();
 
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const serviceSelect = document.getElementById('service_id');
+    const employeeSelect = document.getElementById('employee_id');
+
+    const employees = Array.from(employeeSelect.options).slice(1);
+
+    serviceSelect.addEventListener('change', function () {
+        const selectedService = this.value;
+
+        employeeSelect.innerHTML = '';
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+
+        if (!selectedService) {
+            placeholder.textContent = <?= json_encode(
+                t('Сначала выберите услугу', 'Vali kõigepealt teenus')
+            ) ?>;
+
+            employeeSelect.appendChild(placeholder);
+            employeeSelect.disabled = true;
+            return;
+        }
+
+        placeholder.textContent = <?= json_encode(
+            t('Выберите мастера', 'Vali meister')
+        ) ?>;
+
+        employeeSelect.appendChild(placeholder);
+
+        let count = 0;
+
+        employees.forEach(function (employee) {
+            const services = employee.dataset.services
+                .split(',')
+                .filter(Boolean);
+
+            if (services.includes(selectedService)) {
+                employeeSelect.appendChild(employee.cloneNode(true));
+                count++;
+            }
+        });
+
+        if (count === 0) {
+            placeholder.textContent = <?= json_encode(
+                t(
+                    'Нет мастеров для этой услуги',
+                    'Selle teenuse jaoks pole meistreid'
+                )
+            ) ?>;
+
+            employeeSelect.disabled = true;
+        } else {
+            employeeSelect.disabled = false;
+        }
+    });
+});
+</script>
 
 <?php
 $content = ob_get_clean();

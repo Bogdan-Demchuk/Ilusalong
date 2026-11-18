@@ -26,9 +26,9 @@ class ModelAdminCategory
         $db = new Database();
 
         return $db->executePrepared(
-            'INSERT INTO category (name_et, name_ru)
-             VALUES (?, ?)',
-            [$nameEt, $nameRu]
+            'INSERT INTO category (name_et, name_ru, description)
+            VALUES (?, ?, ?)',
+            [$nameEt, $nameRu, '']
         );
     }
 
@@ -38,8 +38,8 @@ class ModelAdminCategory
 
         return $db->executePrepared(
             'UPDATE category
-             SET name_et = ?, name_ru = ?
-             WHERE id = ?',
+            SET name_et = ?, name_ru = ?
+            WHERE id = ?',
             [$nameEt, $nameRu, $id]
         );
     }

@@ -69,4 +69,48 @@ class Auth
             && isset($_SESSION['user_role'])
             && $_SESSION['user_role'] === 'admin';
     }
+    public static function deleteUser($userId)
+    {
+        $db = new Database();
+
+        try {
+            // Проверяем, что существует именно обычный пользователь
+            $user = $db->getOne(
+                "SELECT id FROM users WHERE id = ? AND role = 'user'",
+                [$userId]
+            );
+
+            if (!$user) {
+                return false;
+            }
+
+            $db->beginTransaction();
+
+            // Удаляем записи пользователя
+            $db->executePrepared(
+                "DELETE FROM appointments WHERE user_id = ?",
+                [$userId]
+            );
+
+            // Удаляем отзывы пользователя
+            $db->executePrepared(
+                "DELETE FROM reviews WHERE user_id = ?",
+                [$userId]
+            );
+
+            // Удаляем аккаунт
+            $db->executePrepared(
+                "DELETE FROM users WHERE id = ? AND role = 'user'",
+                [$userId]
+            );
+
+            $db->commit();
+
+            return true;
+
+        } catch (PDOException $e) {
+            $db->rollBack();
+            return false;
+        }
+    }
 }

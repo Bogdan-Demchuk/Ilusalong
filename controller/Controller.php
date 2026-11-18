@@ -307,7 +307,67 @@ class Controller
         header('Location: /ilusalong/');
         exit;
     }
+    public static function DeleteAccount()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /ilusalong/login');
+            exit;
+        }
 
+        // Администратор не может удалить аккаунт через эту функцию
+        if (($_SESSION['user_role'] ?? '') !== 'user') {
+            header('Location: /ilusalong/index');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /ilusalong/index');
+            exit;
+        }
+
+        // Проверка CSRF-токена
+        if (
+            empty($_SESSION['delete_account_token']) ||
+            !isset($_POST['delete_account_token']) ||
+            !hash_equals(
+                $_SESSION['delete_account_token'],
+                $_POST['delete_account_token']
+            )
+        ) {
+            header('Location: /ilusalong/index');
+            exit;
+        }
+
+        $userId = (int) $_SESSION['user_id'];
+
+        if (Auth::deleteUser($userId)) {
+            // Удаляем сессию после успешного удаления аккаунта
+            $_SESSION = [];
+
+            if (ini_get('session.use_cookies')) {
+                $params = session_get_cookie_params();
+
+                setcookie(
+                    session_name(),
+                    '',
+                    time() - 42000,
+                    $params['path'],
+                    $params['domain'],
+                    $params['secure'],
+                    $params['httponly']
+                );
+            }
+
+            session_destroy();
+
+            header('Location: /ilusalong/');
+            exit;
+        }
+
+        // Если удаление не удалось, аккаунт и сессия сохраняются
+        header('Location: /ilusalong/index');
+        exit;
+    }
 
     public static function error404()
     {

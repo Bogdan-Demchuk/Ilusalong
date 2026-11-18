@@ -47,7 +47,7 @@ if (empty($services)) {
 
         $photo = $photoFile !== ''
             ? '<img class="service-photo"
-                src="/ilusalong/public/images/services/' .
+                src="/ilusalong/images/services/' .
                 rawurlencode($photoFile) .
                 '"
                 alt="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '"

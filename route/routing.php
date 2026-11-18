@@ -45,6 +45,9 @@ elseif ($path === 'login') {
 elseif ($path === 'register') {
     $response = Controller::Register();
 }
+elseif ($path === 'delete-account') {
+    $response = Controller::DeleteAccount();
+}
 elseif ($path === 'logout') {
     $response = Controller::Logout();
 }

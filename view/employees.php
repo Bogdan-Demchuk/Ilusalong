@@ -51,7 +51,7 @@ if (empty($employees)) {
 
         if ($photoFile !== '') {
             $photo = '<img class="employee-photo"
-                src="/ilusalong/public/images/employees/' .
+                src="/ilusalong/images/employees/' .
                 rawurlencode($photoFile) .
                 '"
                 alt="' . htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') . '"

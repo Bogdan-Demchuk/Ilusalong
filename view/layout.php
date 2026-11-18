@@ -1,3 +1,10 @@
+<?php
+if (isset($_SESSION['user_id']) && ($_SESSION['user_role'] ?? '') === 'user') {
+    if (empty($_SESSION['delete_account_token'])) {
+        $_SESSION['delete_account_token'] = bin2hex(random_bytes(32));
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="<?= ($_SESSION['lang'] ?? 'ru') === 'et' ? 'et' : 'ru' ?>">
 
@@ -73,9 +80,18 @@
                     <?= t('Записи', 'Broneeringud') ?>
                 </a>
 
-                <a href="/ilusalong/logout" class="nav-login">
-                    <?= t('Выйти', 'Logi välja') ?>
-                </a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button type="button"
+                            class="nav-login"
+                            onclick="document.getElementById('accountModal').style.display='flex';"
+                            style="cursor:pointer; position:relative; z-index:10001; pointer-events:auto;">
+                        <?= t('Выйти', 'Logi välja') ?>
+                    </button>
+                <?php else: ?>
+                    <a href="/ilusalong/login" class="nav-login">
+                        <?= t('Войти', 'Logi sisse') ?>
+                    </a>
+                <?php endif; ?>
 
             </nav>
 
@@ -111,6 +127,86 @@
 </footer>
 
 <?php endif; ?>
+<?php if (isset($_SESSION['user_id'])): ?>
 
+<div id="accountModal" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:9999;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+">
+    <div style="
+        background:#fffaf6;
+        padding:30px;
+        border-radius:16px;
+        width:100%;
+        max-width:380px;
+        text-align:center;
+        box-shadow:0 10px 40px rgba(0,0,0,0.15);
+    ">
+
+        <h2 style="margin-top:0;">
+            <?= t('Что вы хотите сделать?', 'Mida soovite teha?') ?>
+        </h2>
+
+        <a href="/ilusalong/logout"
+           style="
+               display:block;
+               padding:13px;
+               margin:15px 0;
+               background:#b78b72;
+               color:white;
+               text-decoration:none;
+               border-radius:8px;
+           ">
+            <?= t('Выйти из аккаунта', 'Logi kontolt välja') ?>
+        </a>
+
+        <?php if (($_SESSION['user_role'] ?? '') === 'user'): ?>
+
+            <form method="POST" action="/ilusalong/delete-account"
+                  onsubmit="return confirm('<?= t('Вы действительно хотите удалить аккаунт? Это действие нельзя отменить.', 'Kas soovite kindlasti konto kustutada? Seda toimingut ei saa tagasi võtta.') ?>')">
+
+                <input type="hidden"
+                       name="delete_account_token"
+                       value="<?= htmlspecialchars($_SESSION['delete_account_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+
+                <button type="submit"
+                        style="
+                            width:100%;
+                            padding:13px;
+                            background:#fff;
+                            color:#b34b4b;
+                            border:1px solid #b34b4b;
+                            border-radius:8px;
+                            cursor:pointer;
+                        ">
+                    <?= t('Удалить аккаунт', 'Kustuta konto') ?>
+                </button>
+
+            </form>
+
+        <?php endif; ?>
+
+        <button type="button"
+                onclick="document.getElementById('accountModal').style.display='none'"
+                style="
+                    margin-top:15px;
+                    border:none;
+                    background:none;
+                    cursor:pointer;
+                    color:#777;
+                ">
+            <?= t('Отмена', 'Tühista') ?>
+        </button>
+
+    </div>
+</div>
+
+<?php endif; ?>
 </body>
 </html>

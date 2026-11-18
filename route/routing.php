@@ -30,6 +30,9 @@ elseif ($path === 'employees') {
 elseif ($path === 'appointments') {
     $response = Controller::Appointments();
 }
+elseif ($path === 'appointment-availability') {
+    $response = Controller::AppointmentAvailability();
+}
 elseif ($path === 'my-appointments') {
     $response = Controller::MyAppointments();
 }

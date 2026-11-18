@@ -978,6 +978,7 @@ p {
 .appointment-form > :nth-child(9)  { grid-area: 5 / 1 / auto / -1; }
 .appointment-form > :nth-child(10) { grid-area: 6 / 1 / auto / -1; }
 .appointment-form > :nth-child(11) { grid-area: 7 / 1 / auto / -1; }
+.appointment-form > :nth-child(12) { grid-area: 8 / 1 / auto / -1; }
 
 /* ==========================================================================
    МОИ ЗАПИСИ

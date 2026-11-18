@@ -48,6 +48,9 @@ class Controller
         $selectedServiceId = $requestedServiceId && $requestedServiceId > 0
             ? (int) $requestedServiceId
             : null;
+        $selectedEmployeeId = null;
+        $selectedDate = '';
+        $selectedTime = '';
 
         if (!isset($_SESSION['user_id'])) {
             unset($_SESSION['redirect_after_login']);
@@ -70,8 +73,13 @@ class Controller
             $selectedServiceId = $serviceId && $serviceId > 0
                 ? (int) $serviceId
                 : null;
+            $selectedEmployeeId = $employeeId && $employeeId > 0
+                ? (int) $employeeId
+                : null;
             $date = $_POST['appointment_date'] ?? '';
             $time = $_POST['appointment_time'] ?? '';
+            $selectedDate = is_string($date) ? $date : '';
+            $selectedTime = is_string($time) ? $time : '';
             $comment = trim($_POST['comment'] ?? '');
 
             if (!$serviceId || !$employeeId || $date === '' || $time === '') {
@@ -96,7 +104,7 @@ class Controller
                         exit;
                     }
 
-                    $error = 'Valitud aeg on selle meistri jaoks juba hõivatud.';
+                    $error = 'Valitud aeg pole saadaval. Palun vali teine aeg.';
                 } catch (PDOException $e) {
                     $error = 'Broneerimine ebaõnnestus. Kontrolli andmeid ja proovi uuesti.';
                 }
@@ -124,6 +132,56 @@ class Controller
 
         include 'view/appointments.php';
     }
+
+    public static function AppointmentAvailability()
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            return json_encode(['error' => 'Authentication required.']);
+        }
+
+        $employeeId = filter_input(INPUT_GET, 'employee_id', FILTER_VALIDATE_INT);
+        $serviceId = filter_input(INPUT_GET, 'service_id', FILTER_VALIDATE_INT);
+        $date = $_GET['date'] ?? '';
+        $dateValue = is_string($date)
+            ? DateTime::createFromFormat('!Y-m-d', $date)
+            : false;
+
+        if (
+            !$employeeId ||
+            !$serviceId ||
+            $employeeId < 1 ||
+            $serviceId < 1 ||
+            !$dateValue ||
+            $dateValue->format('Y-m-d') !== $date
+        ) {
+            http_response_code(400);
+            return json_encode(['error' => 'Invalid appointment selection.']);
+        }
+
+        try {
+            if (!Employees::canPerformService($employeeId, $serviceId)) {
+                http_response_code(400);
+                return json_encode(['error' => 'Invalid appointment selection.']);
+            }
+
+            return json_encode([
+                'slots' => Appointments::getAvailableTimeSlots(
+                    $employeeId,
+                    $serviceId,
+                    $date
+                )
+            ]);
+        } catch (PDOException $e) {
+            error_log('Appointment availability lookup failed: ' . $e->getMessage());
+            http_response_code(500);
+
+            return json_encode(['error' => 'Availability could not be loaded.']);
+        }
+    }
+
     public static function MyAppointments()
     {
         if (!isset($_SESSION['user_id'])) {

@@ -95,7 +95,9 @@ class ModelAdminAppointments
                     $employeeId,
                     $serviceId,
                     $appointmentDate,
-                    $appointmentTime
+                    $appointmentTime,
+                    null,
+                    false
                 )
             ) {
                 $db->rollBack();
@@ -150,7 +152,8 @@ class ModelAdminAppointments
                     $serviceId,
                     $appointmentDate,
                     $appointmentTime,
-                    $id
+                    $id,
+                    false
                 )
             ) {
                 $db->rollBack();

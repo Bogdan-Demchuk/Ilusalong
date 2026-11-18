@@ -284,15 +284,30 @@ class Controller
         $error = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
+            $email = is_string($_POST['email'] ?? null)
+                ? trim($_POST['email'])
+                : '';
+            $password = is_string($_POST['password'] ?? null)
+                ? $_POST['password']
+                : '';
+            $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
-                $error = 'Palun sisesta korrektne email ja parool.';
+            if (!Auth::canAttemptLogin($email, $ipAddress)) {
+                $error = t(
+                    'Слишком много попыток входа. Попробуйте через 15 минут.',
+                    'Liiga palju sisselogimiskatseid. Proovi 15 minuti pärast uuesti.'
+                );
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
+                Auth::recordFailedLogin($email, $ipAddress);
+                $error = t(
+                    'Введите корректный email и пароль.',
+                    'Palun sisesta korrektne email ja parool.'
+                );
             } else {
                 $user = Auth::loginUser($email, $password);
 
                 if ($user) {
+                    Auth::clearLoginFailures($email);
                     session_regenerate_id(true);
 
                     $_SESSION['user_id'] = (int) $user['id'];
@@ -311,7 +326,11 @@ class Controller
                     exit;
                 }
 
-                $error = 'Vale email või parool.';
+                Auth::recordFailedLogin($email, $ipAddress);
+                $error = t(
+                    'Неверный email или пароль.',
+                    'Vale email või parool.'
+                );
             }
         }
 

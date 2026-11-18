@@ -85,21 +85,46 @@ class ModelAdminAppointments
     ) {
         $db = new Database();
 
-        return $db->executePrepared(
-            'INSERT INTO appointments
-                (user_id, employee_id, service_id, appointment_date,
-                 appointment_time, status, comment)
-             VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [
-                $userId,
-                $employeeId,
-                $serviceId,
-                $appointmentDate,
-                $appointmentTime,
-                $status,
-                $comment
-            ]
-        );
+        $db->beginTransaction();
+
+        try {
+            if (
+                $status !== 'cancelled' &&
+                !Appointments::lockAndCheckAvailability(
+                    $db,
+                    $employeeId,
+                    $serviceId,
+                    $appointmentDate,
+                    $appointmentTime
+                )
+            ) {
+                $db->rollBack();
+                return false;
+            }
+
+            $created = $db->executePrepared(
+                'INSERT INTO appointments
+                    (user_id, employee_id, service_id, appointment_date,
+                     appointment_time, status, comment)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $userId,
+                    $employeeId,
+                    $serviceId,
+                    $appointmentDate,
+                    $appointmentTime,
+                    $status,
+                    $comment
+                ]
+            );
+
+            $db->commit();
+
+            return $created;
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
     }
 
     public static function update(
@@ -114,27 +139,53 @@ class ModelAdminAppointments
     ) {
         $db = new Database();
 
-        return $db->executePrepared(
-            'UPDATE appointments
-             SET user_id = ?,
-                 employee_id = ?,
-                 service_id = ?,
-                 appointment_date = ?,
-                 appointment_time = ?,
-                 status = ?,
-                 comment = ?
-             WHERE id = ?',
-            [
-                $userId,
-                $employeeId,
-                $serviceId,
-                $appointmentDate,
-                $appointmentTime,
-                $status,
-                $comment,
-                $id
-            ]
-        );
+        $db->beginTransaction();
+
+        try {
+            if (
+                $status !== 'cancelled' &&
+                !Appointments::lockAndCheckAvailability(
+                    $db,
+                    $employeeId,
+                    $serviceId,
+                    $appointmentDate,
+                    $appointmentTime,
+                    $id
+                )
+            ) {
+                $db->rollBack();
+                return false;
+            }
+
+            $updated = $db->executePrepared(
+                'UPDATE appointments
+                 SET user_id = ?,
+                     employee_id = ?,
+                     service_id = ?,
+                     appointment_date = ?,
+                     appointment_time = ?,
+                     status = ?,
+                     comment = ?
+                 WHERE id = ?',
+                [
+                    $userId,
+                    $employeeId,
+                    $serviceId,
+                    $appointmentDate,
+                    $appointmentTime,
+                    $status,
+                    $comment,
+                    $id
+                ]
+            );
+
+            $db->commit();
+
+            return $updated;
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
     }
 
     public static function delete($id)

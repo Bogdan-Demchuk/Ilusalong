@@ -146,7 +146,7 @@ class ControllerAdminAppointments
 
             if ($error === '') {
                 try {
-                    ModelAdminAppointments::add(
+                    $created = ModelAdminAppointments::add(
                         (int) $appointment['user_id'],
                         (int) $appointment['employee_id'],
                         (int) $appointment['service_id'],
@@ -156,8 +156,12 @@ class ControllerAdminAppointments
                         $appointment['comment']
                     );
 
-                    header('Location: /ilusalong/ilusalong_admin/appointments');
-                    exit;
+                    if ($created) {
+                        header('Location: /ilusalong/ilusalong_admin/appointments');
+                        exit;
+                    }
+
+                    $error = 'Valitud töötaja on sel ajal juba broneeritud.';
                 } catch (PDOException $e) {
                     $error = 'Broneeringu salvestamine ebaõnnestus. Kontrolli sisestatud andmeid.';
                 }
@@ -209,7 +213,7 @@ class ControllerAdminAppointments
 
             if ($error === '') {
                 try {
-                    ModelAdminAppointments::update(
+                    $updated = ModelAdminAppointments::update(
                         $id,
                         (int) $updatedAppointment['user_id'],
                         (int) $updatedAppointment['employee_id'],
@@ -220,8 +224,12 @@ class ControllerAdminAppointments
                         $updatedAppointment['comment']
                     );
 
-                    header('Location: /ilusalong/ilusalong_admin/appointments');
-                    exit;
+                    if ($updated) {
+                        header('Location: /ilusalong/ilusalong_admin/appointments');
+                        exit;
+                    }
+
+                    $error = 'Valitud töötaja on sel ajal juba broneeritud.';
                 } catch (PDOException $e) {
                     $error = 'Broneeringu muutmine ebaõnnestus. Kontrolli sisestatud andmeid.';
                 }

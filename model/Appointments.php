@@ -63,21 +63,94 @@ class Appointments
     ) {
         $db = new Database();
 
+        $db->beginTransaction();
+
+        try {
+            if (!self::lockAndCheckAvailability(
+                $db,
+                $employeeId,
+                $serviceId,
+                $date,
+                $time
+            )) {
+                $db->rollBack();
+                return false;
+            }
+
+            $query = "
+                INSERT INTO appointments
+                    (user_id, employee_id, service_id,
+                    appointment_date, appointment_time, status, comment)
+                VALUES (?, ?, ?, ?, ?, 'pending', ?)
+            ";
+
+            $created = $db->executePrepared($query, [
+                (int)$userId,
+                (int)$employeeId,
+                (int)$serviceId,
+                $date,
+                $time,
+                $comment
+            ]);
+
+            $db->commit();
+
+            return $created;
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
+    }
+
+    public static function lockAndCheckAvailability(
+        $db,
+        $employeeId,
+        $serviceId,
+        $date,
+        $time,
+        $excludeAppointmentId = null
+    ) {
+        $employee = $db->getOne(
+            'SELECT id FROM employees WHERE id = ? FOR UPDATE',
+            [(int) $employeeId]
+        );
+
+        if (!$employee) {
+            return false;
+        }
+
         $query = "
-            INSERT INTO appointments
-                (user_id, employee_id, service_id,
-                appointment_date, appointment_time, status, comment)
-            VALUES (?, ?, ?, ?, ?, 'pending', ?)
+            SELECT appointments.id
+            FROM appointments
+            INNER JOIN services AS booked_service
+                ON appointments.service_id = booked_service.id
+            INNER JOIN services AS requested_service
+                ON requested_service.id = ?
+            WHERE appointments.employee_id = ?
+                AND appointments.appointment_date = ?
+                AND appointments.status IN ('pending', 'confirmed')
+                AND TIME_TO_SEC(appointments.appointment_time)
+                    < TIME_TO_SEC(?) + requested_service.duration * 60
+                AND TIME_TO_SEC(appointments.appointment_time)
+                    + booked_service.duration * 60 > TIME_TO_SEC(?)
         ";
 
-        return $db->executePrepared($query, [
-            (int)$userId,
-            (int)$employeeId,
-            (int)$serviceId,
+        $params = [
+            (int) $serviceId,
+            (int) $employeeId,
             $date,
             $time,
-            $comment
-        ]);
+            $time
+        ];
+
+        if ($excludeAppointmentId !== null) {
+            $query .= ' AND appointments.id <> ?';
+            $params[] = (int) $excludeAppointmentId;
+        }
+
+        $query .= ' LIMIT 1';
+
+        return !$db->getOne($query, $params);
     }
     public static function cancelAppointment($appointmentId, $userId)
     {

@@ -96,7 +96,7 @@ class Controller
                         exit;
                     }
 
-                    $error = 'Broneerimine ebaõnnestus. Palun proovi uuesti.';
+                    $error = 'Valitud aeg on selle meistri jaoks juba hõivatud.';
                 } catch (PDOException $e) {
                     $error = 'Broneerimine ebaõnnestus. Kontrolli andmeid ja proovi uuesti.';
                 }

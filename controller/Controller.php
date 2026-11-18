@@ -44,7 +44,19 @@ class Controller
     
     public static function Appointments()
     {
+        $requestedServiceId = filter_input(INPUT_GET, 'service_id', FILTER_VALIDATE_INT);
+        $selectedServiceId = $requestedServiceId && $requestedServiceId > 0
+            ? (int) $requestedServiceId
+            : null;
+
         if (!isset($_SESSION['user_id'])) {
+            unset($_SESSION['redirect_after_login']);
+
+            if ($selectedServiceId !== null) {
+                $_SESSION['redirect_after_login'] =
+                    '/ilusalong/appointments?service_id=' . $selectedServiceId;
+            }
+
             header('Location: /ilusalong/login');
             exit;
         }
@@ -55,6 +67,9 @@ class Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $serviceId = filter_input(INPUT_POST, 'service_id', FILTER_VALIDATE_INT);
             $employeeId = filter_input(INPUT_POST, 'employee_id', FILTER_VALIDATE_INT);
+            $selectedServiceId = $serviceId && $serviceId > 0
+                ? (int) $serviceId
+                : null;
             $date = $_POST['appointment_date'] ?? '';
             $time = $_POST['appointment_time'] ?? '';
             $comment = trim($_POST['comment'] ?? '');
@@ -227,9 +242,13 @@ class Controller
                     $_SESSION['user_role'] = $user['role'];
 
                     if ($user['role'] === 'admin') {
+                        unset($_SESSION['redirect_after_login']);
                         header('Location: /ilusalong/ilusalong_admin/');
                     } else {
-                        header('Location: /ilusalong/index');
+                        $redirect = $_SESSION['redirect_after_login']
+                            ?? '/ilusalong/index';
+                        unset($_SESSION['redirect_after_login']);
+                        header('Location: ' . $redirect);
                     }
                     exit;
                 }

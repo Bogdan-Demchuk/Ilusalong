@@ -31,12 +31,15 @@ ob_start();
         </label>
 
         <select name="service_id" id="service_id" required>
-            <option value="">
+            <option value="" <?= $selectedServiceId === null ? 'selected' : '' ?>>
                 <?= t('Выберите услугу', 'Vali teenus') ?>
             </option>
 
             <?php foreach ($services as $service): ?>
-                <option value="<?= (int)$service['id'] ?>">
+                <option
+                    value="<?= (int)$service['id'] ?>"
+                    <?= $selectedServiceId === (int)$service['id'] ? 'selected' : '' ?>
+                >
                     <?= htmlspecialchars(
                         ($_SESSION['lang'] ?? 'ru') === 'et'
                             ? $service['name_et']
@@ -179,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
             employeeSelect.disabled = false;
         }
     });
+
+    serviceSelect.dispatchEvent(new Event('change'));
 });
 </script>
 

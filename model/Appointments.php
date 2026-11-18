@@ -37,6 +37,7 @@ class Appointments
             SELECT
                 appointments.*,
                 services.name_et,
+                services.name_ru,
                 employees.first_name,
                 employees.last_name
             FROM appointments
